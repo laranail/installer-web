@@ -25,14 +25,14 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: dom, curl, libxml, mbstring, zip, fileinfo, pdo, sqlite3, pdo_sqlite, sodium
           coverage: none
-      # CI has no local sibling checkouts; override the `path` repos (used for
-      # local dev) with their public VCS sources before installing.
-      - name: Resolve laranail packages from VCS
+      # Override the `path` repos for the siblings not yet on Packagist
+      # (installer-headless + its transitive license-verifier). package-tools, console
+      # and database-tools resolve from Packagist. `no-api: true` git-clones the repos
+      # instead of hitting the GitHub REST API (avoids HTTP 429 rate limits).
+      - name: Resolve unpublished laranail packages from VCS
         run: |
-          composer config repositories.installer-headless vcs https://github.com/laranail/installer-headless
-          composer config repositories.package-tools vcs https://github.com/laranail/package-tools
-          composer config repositories.console vcs https://github.com/laranail/console
-          composer config repositories.license-verifier vcs https://github.com/laranail/license-verifier
+          composer config repositories.installer-headless '{"type":"vcs","url":"https://github.com/laranail/installer-headless","no-api":true}'
+          composer config repositories.license-verifier '{"type":"vcs","url":"https://github.com/laranail/license-verifier","no-api":true}'
       - name: Install dependencies
         run: |
           if [ "${{ matrix.dependency-versions }}" = "prefer-lowest" ]; then
