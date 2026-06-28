@@ -1,0 +1,99 @@
+{
+    "name": "laranail/installer-web",
+    "description": "Web UI for laranail/installer-headless — a Tailwind + Blade + Livewire 4 install wizard that drives the headless installer engine. Holds no install logic; every operation is delegated to the core.",
+    "keywords": [
+        "laravel",
+        "installer",
+        "setup",
+        "wizard",
+        "livewire",
+        "tailwind",
+        "laranail"
+    ],
+    "homepage": "https://opensource.simtabi.com/installer-web/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Simtabi LLC",
+            "email": "opensource@simtabi.com",
+            "homepage": "https://opensource.simtabi.com",
+            "role": "Organization"
+        },
+        {
+            "name": "Imani Manyara",
+            "email": "imani@simtabi.com",
+            "role": "Maintainer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/laranail/installer-web/issues",
+        "source": "https://github.com/laranail/installer-web",
+        "docs": "https://opensource.simtabi.com/installer-web/docs/"
+    },
+    "require": {
+        "php": "^8.4.1 || ^8.5",
+        "illuminate/http": "^13.0",
+        "illuminate/support": "^13.0",
+        "laranail/installer-headless": "^0.1",
+        "laranail/package-tools": "^1.0",
+        "livewire/livewire": "^4.2"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.18",
+        "nunomaduro/collision": "^8.8",
+        "orchestra/testbench": "^11.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "rector/rector": "^2.0",
+        "roave/security-advisories": "dev-latest"
+    },
+    "repositories": {
+        "installer-headless": { "type": "path", "url": "../headless" },
+        "package-tools": { "type": "path", "url": "../../package/tools" },
+        "console": { "type": "path", "url": "../../tools/console" },
+        "license-verifier": { "type": "path", "url": "../../licensing/verifier" }
+    },
+    "autoload": {
+        "psr-4": {
+            "Simtabi\\Laranail\\Installer\\Web\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Simtabi\\Laranail\\Installer\\Web\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@php vendor/bin/testbench package:discover --ansi",
+        "analyse": "vendor/bin/phpstan analyse",
+        "test": "vendor/bin/pest --colors=always",
+        "lint": ["@pint", "@analyse", "@rector"],
+        "pint": "vendor/bin/pint --test",
+        "format": "vendor/bin/pint",
+        "rector": "vendor/bin/rector process --dry-run",
+        "rector-fix": "vendor/bin/rector process"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Simtabi\\Laranail\\Installer\\Web\\Providers\\InstallerWebServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

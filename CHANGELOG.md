@@ -1,0 +1,50 @@
+# Changelog
+
+All notable changes to `laranail/installer-web` are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.1.0] - 2026-06-28
+
+First public release. The pre-1.0 development history below is folded into this
+initial release.
+
+### Added
+
+- **Per-product wizard routes** — `/{prefix}/p/{product}/{step}` drives the wizard
+  through `InstallerEngine::forProduct($product)` (each product its own pipeline +
+  isolated state). The default `/{prefix}/{step}` routes are unchanged; all
+  orchestration stays in the headless core.
+- The generic field partial now renders `textarea` and pass-through input types
+  (`number`/`url`/`tel`/`date`) so consumer-declared custom fields render correctly.
+- **Web decoration layer** — the `InstallerUi` facade + `WebUiRegistry`: reshape any
+  step's presentation from a consumer provider with no package edit — per-step view
+  override, per-step Livewire component swap, layout slots (`head`/`before-content`/
+  `after-content`/`footer`), config-driven branding (title/logo/theme) + layout override,
+  a custom field-type registry, and forwarded step add/remove/update. `WizardStep` is now
+  non-final with `saving()`/`saved()` hooks. Ships a reusable `<x-installer-web::field>`
+  Blade component. See `docs/decorating.md`.
+
+### Changed
+
+- Default pipeline step key `admin` → `user` (the headless package generalized admin
+  creation to a configurable user). The web layer is generic; no consumer-facing API
+  changed beyond the step key.
+
+### Initial build
+
+### Added
+
+- Tailwind + Blade install wizard driving `laranail/installer-headless`.
+- `BaseInstallerController` + `WizardController` + routes (configurable prefix) that
+  forward step input to the headless engine; no install logic in the web layer.
+- **Generic Livewire 4 `WizardStep`** that renders any core step's fields and
+  validates against the step's **core rules** (the web layer declares none of its
+  own). The environment step pre-fills from the existing `.env` (edit-in-place).
+- **`StepFormRequest`** deriving its rules from the core step (pure pass-through).
+- Middleware: `installer.guard` (install-once) and opt-in `installer.installed`
+  (app-route guard); route rate limiting; CSRF.
+- Pest feature tests, PHPStan level 8, Pint and Rector configuration.

@@ -1,0 +1,23 @@
+# Composer
+composer.lock
+/vendor
+
+# Frontend
+/node_modules
+
+# Caches / build
+.phpunit.cache
+.phpunit.result.cache
+/build
+/coverage
+testbench.yaml
+
+# IDE helpers
+_ide_helper.php
+.phpstorm.meta.php
+/.idea
+/.fleet
+/.vscode
+
+# OS
+.DS_Store
