@@ -51,6 +51,7 @@ return [
 
     'denied_view' => 'installer-web::denied',
     'gate_view' => 'installer-web::gate',
+    'setup_view' => 'installer-web::setup',
 
     /*
     |--------------------------------------------------------------------------

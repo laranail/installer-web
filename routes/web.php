@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Route;
 use Simtabi\Laranail\Installer\Headless\Support\InstallationState;
 use Simtabi\Laranail\Installer\Web\Http\Controllers\GateController;
+use Simtabi\Laranail\Installer\Web\Http\Controllers\SetupController;
 use Simtabi\Laranail\Installer\Web\Http\Controllers\WizardController;
 
 // Hardened auto-disable: once installed, don't register the installer routes at all
@@ -20,17 +21,21 @@ $prefix = (string) config('installer-web.prefix', 'install');
 // Token gate — registered before the wildcard `/{step}` route so `/install/gate`
 // never resolves as a step. Not behind `installer.token` (it IS the entry point);
 // access policy (IP/host/window/HTTPS) + headers still apply, with a strict limiter.
-Route::middleware(array_merge($base, ['installer.headers', 'installer.guard', 'installer.security', 'throttle:installer-gate']))
+Route::middleware(array_merge(['installer.stores'], $base, ['installer.headers', 'installer.guard', 'installer.security', 'throttle:installer-gate']))
     ->prefix($prefix)
     ->name('installer-web.')
     ->group(function (): void {
         Route::get('gate', [GateController::class, 'show'])->name('gate');
         Route::post('gate', [GateController::class, 'store'])->name('gate.store');
+
+        // No-SSH security setup (set the gate password / lock-to-IP, written to .env).
+        Route::get('setup', [SetupController::class, 'show'])->name('setup');
+        Route::post('setup', [SetupController::class, 'store'])->name('setup.store');
     });
 
 // Wizard. Full stack: security headers → install-once guard → access policy →
 // token gate → throttle.
-Route::middleware(array_merge($base, ['installer.headers', 'installer.guard', 'installer.security', 'installer.token', 'throttle:installer']))
+Route::middleware(array_merge(['installer.stores'], $base, ['installer.headers', 'installer.guard', 'installer.security', 'installer.token', 'throttle:installer']))
     ->prefix($prefix)
     ->name('installer-web.')
     ->group(function (): void {

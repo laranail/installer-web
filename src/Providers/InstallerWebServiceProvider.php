@@ -15,6 +15,7 @@ use Simtabi\Laranail\Installer\Web\Http\Middleware\EnsureInstalled;
 use Simtabi\Laranail\Installer\Web\Http\Middleware\InstallerSecurityHeaders;
 use Simtabi\Laranail\Installer\Web\Http\Middleware\RedirectIfInstalled;
 use Simtabi\Laranail\Installer\Web\Http\Middleware\RequireInstallerToken;
+use Simtabi\Laranail\Installer\Web\Http\Middleware\UseInstallerStores;
 use Simtabi\Laranail\Installer\Web\InstallerUi;
 use Simtabi\Laranail\Installer\Web\Livewire\WizardStep;
 use Simtabi\Laranail\Installer\Web\Support\WebUiRegistry;
@@ -43,6 +44,7 @@ final class InstallerWebServiceProvider extends PackageServiceProvider
             ->registerMiddlewareAliases([
                 'installer.guard' => RedirectIfInstalled::class,
                 'installer.installed' => EnsureInstalled::class,
+                'installer.stores' => UseInstallerStores::class,
                 'installer.headers' => InstallerSecurityHeaders::class,
                 'installer.security' => EnforceInstallerAccess::class,
                 'installer.token' => RequireInstallerToken::class,
