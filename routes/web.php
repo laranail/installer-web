@@ -3,8 +3,16 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
+use Simtabi\Laranail\Installer\Headless\Support\InstallationState;
 use Simtabi\Laranail\Installer\Web\Http\Controllers\GateController;
 use Simtabi\Laranail\Installer\Web\Http\Controllers\WizardController;
+
+// Hardened auto-disable: once installed, don't register the installer routes at all
+// (they 404 — stronger than a redirect, and nothing remains to probe/re-run). The
+// install-once redirect guard still covers the brief installing→installed window.
+if ((bool) config('installer.security.disable_after_install', true) && app(InstallationState::class)->isInstalled()) {
+    return;
+}
 
 $base = (array) config('installer-web.middleware', ['web']);
 $prefix = (string) config('installer-web.prefix', 'install');
