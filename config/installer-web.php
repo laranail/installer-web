@@ -41,6 +41,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Security views
+    |--------------------------------------------------------------------------
+    |
+    | Views rendered by the access layer: the generic access-denied page (IP/host/
+    | window/HTTPS failures) and the token gate form. Override to re-skin them.
+    |
+    */
+
+    'denied_view' => 'installer-web::denied',
+    'gate_view' => 'installer-web::gate',
+    'setup_view' => 'installer-web::setup',
+
+    /*
+    |--------------------------------------------------------------------------
     | Branding
     |--------------------------------------------------------------------------
     |

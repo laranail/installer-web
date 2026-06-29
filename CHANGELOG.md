@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Access lockdown enforcement:** `installer.headers` (security response headers),
+  `installer.security` (IP/host/HTTPS/window via the headless policy → generic 403 +
+  audit event), and `installer.token` (header/query/signed-link/session gate) middleware,
+  a `GateController` with neutral gate/denied views, configurable named rate-limiters
+  (`installer` + stricter `installer-gate`), and conditional route registration that 404s
+  the wizard once installed.
+- **Shared-hosting support:** `installer.stores` middleware forces file session/cache for
+  installer requests (so the wizard works pre-migration on db-backed stores), and a
+  `SetupController` + view to set the gate password / lock-to-IP from the browser
+  (written to `.env`) — no shell required.
+
 ## [0.1.0] - 2026-06-28
 
 First public release. The pre-1.0 development history below is folded into this

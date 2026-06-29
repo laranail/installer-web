@@ -109,4 +109,12 @@ The `InstallerUi` registry takes precedence, then a published view, then the pac
 view. Prefer the registry for programmatic, conditional, or per-product decoration; use
 publishing for wholesale redesigns.
 
+## See also
+
+Access lockdown (IP/token/window/throttle, gate + denied + setup views, security
+headers) and shared-hosting support are documented in the headless package —
+[security](https://opensource.simtabi.com/installer-headless/docs/tools/security) and
+[shared hosting](https://opensource.simtabi.com/installer-headless/docs/tools/shared-hosting).
+The shipped `denied`/`gate`/`setup` views are publishable/overridable like any wizard view.
+
 [← Docs index](../README.md#documentation)
