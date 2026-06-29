@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Simtabi\Laranail\Installer\Headless\Support\InstallationState;
 use Simtabi\Laranail\Installer\Web\Http\Middleware\UseInstallerStores;
 
@@ -28,7 +30,7 @@ it('forces file session/cache stores for installer requests (G1)', function (): 
     config()->set('installer.environment.session_store', 'file');
     config()->set('installer.environment.cache_store', 'file');
 
-    (new UseInstallerStores)->handle(Request::create('/install'), fn ($r) => response('ok'));
+    (new UseInstallerStores)->handle(Request::create('/install'), fn ($r): ResponseFactory|Response => response('ok'));
 
     expect(config('session.driver'))->toBe('file')
         ->and(config('cache.default'))->toBe('file');
@@ -36,10 +38,10 @@ it('forces file session/cache stores for installer requests (G1)', function (): 
 
 it('leaves the app stores untouched when overrides are null', function (): void {
     config()->set('session.driver', 'database');
-    config()->set('installer.environment.session_store', null);
-    config()->set('installer.environment.cache_store', null);
+    config()->set('installer.environment.session_store');
+    config()->set('installer.environment.cache_store');
 
-    (new UseInstallerStores)->handle(Request::create('/install'), fn ($r) => response('ok'));
+    (new UseInstallerStores)->handle(Request::create('/install'), fn ($r): ResponseFactory|Response => response('ok'));
 
     expect(config('session.driver'))->toBe('database');
 });
