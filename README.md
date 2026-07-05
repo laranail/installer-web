@@ -1,6 +1,8 @@
 # laranail/installer-web
 
+[![Latest version on Packagist](https://img.shields.io/packagist/v/laranail/installer-web.svg)](https://packagist.org/packages/laranail/installer-web)
 [![Tests](https://github.com/laranail/installer-web/actions/workflows/tests.yml/badge.svg)](https://github.com/laranail/installer-web/actions/workflows/tests.yml)
+[![Static analysis](https://github.com/laranail/installer-web/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/laranail/installer-web/actions/workflows/static-analysis.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 > Tailwind + Blade + **Livewire 4** install wizard for
@@ -56,15 +58,48 @@ install-once guard blocks the wizard.
 - Routes are guarded by the install-once middleware and rate limiting; the `web`
   group provides CSRF.
 
-## Documentation
+## <a name="documentation"></a>Documentation
 
-Hosted at `opensource.simtabi.com/installer-web/docs/`; the same pages live under
-`docs/`:
+Hosted at [`opensource.simtabi.com/installer-web/docs/`](https://opensource.simtabi.com/installer-web/docs/).
+The same pages live under [`docs/`](docs/):
 
-- [Installation](docs/installation.md)
-- [Configuration](docs/configuration.md)
-- [Architecture](docs/architecture.md)
-- [Decorating the wizard](docs/decorating.md) — the `InstallerUi` DSL: per-step views/components, slots, branding, custom field types
+### Guides
+
+- [Installation](docs/installation.md) — install, enable, requirements.
+- [Configuration](docs/configuration.md) — routes, middleware, theming keys.
+- [Architecture](docs/architecture.md) — the presentation layer over the headless engine.
+
+### Reference
+
+- [Decorating the wizard](docs/decorating.md) — the `InstallerUi` DSL: per-step views/components, slots, branding, custom field types.
+
+### Project
+
+- [Changelog](CHANGELOG.md) — release history.
+
+## Stability
+
+Pre-1.0 (0.x) — the public API may change between minor versions. Pin a version before bumping.
+
+## Local development
+
+```bash
+composer install
+composer test
+```
+
+## Sister packages
+
+- [`laranail/installer-headless`](https://github.com/laranail/installer-headless) — the engine this wizard drives (all install logic lives there).
+
+## Community
+
+- [Issues](https://github.com/laranail/installer-web/issues) — bugs + feature requests.
+
+## Contributing & security
+
+- [CONTRIBUTING.md](CONTRIBUTING.md) — workflow + coding standards.
+- [SECURITY.md](SECURITY.md) — how to report a vulnerability.
 
 ## License
 
