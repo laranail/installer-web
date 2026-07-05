@@ -10,7 +10,7 @@
         "tailwind",
         "laranail"
     ],
-    "homepage": "https://opensource.simtabi.com/installer-web/",
+    "homepage": "https://opensource.simtabi.com/documentation/laranail/installer-web/",
     "license": "MIT",
     "authors": [
         {
@@ -28,7 +28,7 @@
     "support": {
         "issues": "https://github.com/laranail/installer-web/issues",
         "source": "https://github.com/laranail/installer-web",
-        "docs": "https://opensource.simtabi.com/installer-web/docs/"
+        "docs": "https://opensource.simtabi.com/documentation/laranail/installer-web/"
     },
     "require": {
         "php": "^8.4.1 || ^8.5",

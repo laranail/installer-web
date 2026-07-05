@@ -5,101 +5,26 @@
 [![Static analysis](https://github.com/laranail/installer-web/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/laranail/installer-web/actions/workflows/static-analysis.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-> Tailwind + Blade + **Livewire 4** install wizard for
-> [`laranail/installer-headless`](https://opensource.simtabi.com/installer-headless/).
-> Pure presentation and input collection — every operation is delegated to the
-> headless engine. It holds no install logic and never touches files or the
-> database directly.
+> A Tailwind + Blade + **Livewire 4** install wizard for [`laranail/installer-headless`](https://opensource.simtabi.com/documentation/laranail/installer-headless/) — pure presentation and input collection; every operation is delegated to the headless engine (no install logic, never touches files or the database directly).
 
-## Contents
+Requires PHP `^8.4.1`, Laravel `^13`, Livewire `^4.2`, and `laranail/installer-headless` (+ `laranail/package-tools`).
 
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Usage](#usage)
-- [How it works](#how-it-works)
-- [Documentation](#documentation)
-- [License](#license)
-
-## Requirements
-
-| Requirement | Constraint |
-|---|---|
-| PHP | `^8.4.1` (8.4, 8.5) |
-| Laravel | `^13.0` |
-| Livewire | `^4.2` |
-| Depends on | `laranail/installer-headless`, `laranail/package-tools` |
-
-## Installation
+## Install
 
 ```bash
 composer require laranail/installer-web
 ```
 
-Both providers auto-discover. Publish the config to change the route prefix:
+Publish the assets/config, then visit the install route — see the docs for the exact steps.
 
-```bash
-php artisan vendor:publish --tag=laranail/installer-web::config
-```
+## Documentation
 
-## Usage
-
-Visit `/install` (configurable prefix). The wizard walks through welcome →
-requirements → environment → migrate → user → (license) → final, and redirects
-to `config('installer.redirect_to')` when complete. Once installed, the
-install-once guard blocks the wizard.
-
-## How it works
-
-- `WizardController` renders each step and forwards collected input to the
-  headless `InstallerEngine` — it performs no install work itself.
-- The **environment/database step is a Livewire 4 component** that pre-fills from
-  the existing `.env` (edit-in-place) and hands values to the engine, which runs
-  the connection test and the atomic `.env` write.
-- Routes are guarded by the install-once middleware and rate limiting; the `web`
-  group provides CSRF.
-
-## <a name="documentation"></a>Documentation
-
-Hosted at [`opensource.simtabi.com/installer-web/docs/`](https://opensource.simtabi.com/installer-web/docs/).
-The same pages live under [`docs/`](docs/):
-
-### Guides
-
-- [Installation](docs/installation.md) — install, enable, requirements.
-- [Configuration](docs/configuration.md) — routes, middleware, theming keys.
-- [Architecture](docs/architecture.md) — the presentation layer over the headless engine.
-
-### Reference
-
-- [Decorating the wizard](docs/decorating.md) — the `InstallerUi` DSL: per-step views/components, slots, branding, custom field types.
-
-### Project
-
-- [Changelog](CHANGELOG.md) — release history.
-
-## Stability
-
-Pre-1.0 (0.x) — the public API may change between minor versions. Pin a version before bumping.
-
-## Local development
-
-```bash
-composer install
-composer test
-```
-
-## Sister packages
-
-- [`laranail/installer-headless`](https://github.com/laranail/installer-headless) — the engine this wizard drives (all install logic lives there).
-
-## Community
-
-- [Issues](https://github.com/laranail/installer-web/issues) — bugs + feature requests.
+Full documentation is at **[opensource.simtabi.com/documentation/laranail/installer-web](https://opensource.simtabi.com/documentation/laranail/installer-web/)** — installation, usage, how the wizard drives the engine, theming, and what gets generated.
 
 ## Contributing & security
 
-- [CONTRIBUTING.md](CONTRIBUTING.md) — workflow + coding standards.
-- [SECURITY.md](SECURITY.md) — how to report a vulnerability.
+Issues and PRs are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). Report vulnerabilities per
+[SECURITY.md](SECURITY.md) (opensource@simtabi.com); participation follows the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## License
 
