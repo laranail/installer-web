@@ -1,0 +1,15 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 8
+    paths:
+        - src
+    ignoreErrors:
+        - identifier: missingType.iterableValue
+        # Package views are registered under the `installer-web::` namespace at
+        # runtime; larastan cannot resolve them statically to view-string, so it
+        # flags valid view() calls. Not a real error.
+        - '#Parameter \#1 \$view of function view expects view-string\|null, string given\.#'
+    reportUnmatchedIgnoredErrors: false
+    treatPhpDocTypesAsCertain: false
