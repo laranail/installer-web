@@ -64,7 +64,7 @@ final class InstallerWebServiceProvider extends PackageServiceProvider
         Livewire::component('installer-wizard-step', WizardStep::class);
 
         // Enables the reusable <x-laranail-installer-web::field /> component in consumer views.
-        Blade::anonymousComponentNamespace('laranail-installer-web::components', 'installer-web');
+        Blade::anonymousComponentNamespace('laranail-installer-web::components', 'laranail-installer-web');
 
         $this->registerRateLimiters();
     }
