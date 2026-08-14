@@ -42,12 +42,12 @@ final class InstallerWebServiceProvider extends PackageServiceProvider
             ->hasViews('laranail-installer-web')
             ->hasRoute('web')
             ->registerMiddlewareAliases([
-                'installer.guard' => RedirectIfInstalled::class,
-                'installer.installed' => EnsureInstalled::class,
-                'installer.stores' => UseInstallerStores::class,
-                'installer.headers' => InstallerSecurityHeaders::class,
-                'installer.security' => EnforceInstallerAccess::class,
-                'installer.token' => RequireInstallerToken::class,
+                'laranail-installer-web.guard' => RedirectIfInstalled::class,
+                'laranail-installer-web.installed' => EnsureInstalled::class,
+                'laranail-installer-web.stores' => UseInstallerStores::class,
+                'laranail-installer-web.headers' => InstallerSecurityHeaders::class,
+                'laranail-installer-web.security' => EnforceInstallerAccess::class,
+                'laranail-installer-web.token' => RequireInstallerToken::class,
             ]);
     }
 

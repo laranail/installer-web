@@ -21,7 +21,7 @@ $prefix = (string) config('installer-web.prefix', 'install');
 // Token gate — registered before the wildcard `/{step}` route so `/install/gate`
 // never resolves as a step. Not behind `installer.token` (it IS the entry point);
 // access policy (IP/host/window/HTTPS) + headers still apply, with a strict limiter.
-Route::middleware(array_merge(['installer.stores'], $base, ['installer.headers', 'installer.guard', 'installer.security', 'throttle:installer-gate']))
+Route::middleware(array_merge(['laranail-installer-web.stores'], $base, ['laranail-installer-web.headers', 'laranail-installer-web.guard', 'laranail-installer-web.security', 'throttle:installer-gate']))
     ->prefix($prefix)
     ->name('installer-web.')
     ->group(function (): void {
@@ -35,7 +35,7 @@ Route::middleware(array_merge(['installer.stores'], $base, ['installer.headers',
 
 // Wizard. Full stack: security headers → install-once guard → access policy →
 // token gate → throttle.
-Route::middleware(array_merge(['installer.stores'], $base, ['installer.headers', 'installer.guard', 'installer.security', 'installer.token', 'throttle:installer']))
+Route::middleware(array_merge(['laranail-installer-web.stores'], $base, ['laranail-installer-web.headers', 'laranail-installer-web.guard', 'laranail-installer-web.security', 'laranail-installer-web.token', 'throttle:installer']))
     ->prefix($prefix)
     ->name('installer-web.')
     ->group(function (): void {
