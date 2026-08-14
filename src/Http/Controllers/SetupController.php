@@ -31,7 +31,7 @@ final class SetupController extends Controller
             return redirect()->route('installer-web.index');
         }
 
-        return view((string) config('installer-web.setup_view', 'installer-web::setup'));
+        return view((string) config('installer-web.setup_view', 'laranail-installer-web::setup'));
     }
 
     public function store(Request $request): RedirectResponse

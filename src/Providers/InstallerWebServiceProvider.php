@@ -39,7 +39,7 @@ final class InstallerWebServiceProvider extends PackageServiceProvider
             ->name('laranail/installer-web')
             ->hasConfigFile('installer-web')
             ->withoutConfigNamespacing()
-            ->hasViews('installer-web')
+            ->hasViews('laranail-installer-web')
             ->hasRoute('web')
             ->registerMiddlewareAliases([
                 'installer.guard' => RedirectIfInstalled::class,
@@ -63,8 +63,8 @@ final class InstallerWebServiceProvider extends PackageServiceProvider
     {
         Livewire::component('installer-wizard-step', WizardStep::class);
 
-        // Enables the reusable <x-installer-web::field /> component in consumer views.
-        Blade::anonymousComponentNamespace('installer-web::components', 'installer-web');
+        // Enables the reusable <x-laranail-installer-web::field /> component in consumer views.
+        Blade::anonymousComponentNamespace('laranail-installer-web::components', 'installer-web');
 
         $this->registerRateLimiters();
     }

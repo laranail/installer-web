@@ -74,7 +74,7 @@ field renderer so your inputs match the default styling and validation display:
     <form wire:submit="save" class="space-y-5">
         @foreach ($fields as $field)
             @if ($field->isVisible($data))
-                <x-installer-web::field :field="$field" />
+                <x-laranail-installer-web::field :field="$field" />
             @endif
         @endforeach
         <button type="submit">Continue</button>
@@ -102,7 +102,7 @@ InstallerUi::component('user', FancyUserStep::class);
 Every view is publishable; replacing the published copy overrides it too:
 
 ```bash
-php artisan vendor:publish --tag=laranail/installer-web::views
+php artisan vendor:publish --tag=laranail/laranail-installer-web::views
 ```
 
 The `InstallerUi` registry takes precedence, then a published view, then the package

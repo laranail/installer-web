@@ -6,7 +6,7 @@
     <form wire:submit="save" class="space-y-5">
         @foreach ($fields as $field)
             @if ($field->isVisible($data))
-                @include('installer-web::partials.field', ['field' => $field])
+                @include('laranail-installer-web::partials.field', ['field' => $field])
             @endif
         @endforeach
 

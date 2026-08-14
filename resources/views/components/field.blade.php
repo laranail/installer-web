@@ -1,4 +1,4 @@
-{{-- Reusable field renderer — use in custom step views: <x-installer-web::field :field="$field" /> --}}
+{{-- Reusable field renderer — use in custom step views: <x-laranail-installer-web::field :field="$field" /> --}}
 @props(['field'])
 
-@include('installer-web::partials.field', ['field' => $field])
+@include('laranail-installer-web::partials.field', ['field' => $field])

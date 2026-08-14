@@ -29,7 +29,7 @@ final readonly class EnforceInstallerAccess
             UnauthorizedInstallerAccess::dispatch($reason, $request->ip(), $request->path());
 
             return response()->view(
-                (string) config('installer-web.denied_view', 'installer-web::denied'),
+                (string) config('installer-web.denied_view', 'laranail-installer-web::denied'),
                 [],
                 Response::HTTP_FORBIDDEN,
             );

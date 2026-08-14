@@ -73,7 +73,7 @@ class WizardStep extends Component
 
     public function render(): View
     {
-        return view('installer-web::livewire.wizard-step', [
+        return view('laranail-installer-web::livewire.wizard-step', [
             'fields' => app(InstallerEngine::class)->fields($this->step),
         ]);
     }

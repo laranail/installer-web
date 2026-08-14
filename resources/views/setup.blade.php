@@ -1,4 +1,4 @@
-@extends(config('installer-web.layout') ?: 'installer-web::layouts.app')
+@extends(config('installer-web.layout') ?: 'laranail-installer-web::layouts.app')
 
 @section('title', 'Secure the installer')
 

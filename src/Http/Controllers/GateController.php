@@ -29,7 +29,7 @@ final class GateController extends Controller
             return redirect()->route('installer-web.index');
         }
 
-        return view((string) config('installer-web.gate_view', 'installer-web::gate'));
+        return view((string) config('installer-web.gate_view', 'laranail-installer-web::gate'));
     }
 
     public function store(Request $request): RedirectResponse

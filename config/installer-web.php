@@ -49,9 +49,9 @@ return [
     |
     */
 
-    'denied_view' => 'installer-web::denied',
-    'gate_view' => 'installer-web::gate',
-    'setup_view' => 'installer-web::setup',
+    'denied_view' => 'laranail-installer-web::denied',
+    'gate_view' => 'laranail-installer-web::gate',
+    'setup_view' => 'laranail-installer-web::setup',
 
     /*
     |--------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-@extends($layout ?? 'installer-web::layouts.app')
+@extends($layout ?? 'laranail-installer-web::layouts.app')
 
 @section('title', 'Requirements')
 

@@ -38,11 +38,11 @@ it('renders a registered custom field type', function (): void {
     rmdir($dir);
 });
 
-it('exposes a reusable <x-installer-web::field> component', function (): void {
+it('exposes a reusable <x-laranail-installer-web::field> component', function (): void {
     $field = new Field('nickname', 'Nickname', 'text');
     view()->share('errors', new ViewErrorBag); // Laravel shares this per-request; bare render needs it
 
-    $html = Blade::render('<x-installer-web::field :field="$field" />', ['field' => $field]);
+    $html = Blade::render('<x-laranail-installer-web::field :field="$field" />', ['field' => $field]);
 
     expect($html)->toContain('Nickname')->toContain('data.nickname');
 });

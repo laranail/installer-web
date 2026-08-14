@@ -21,8 +21,8 @@ auto-discovered.
 ## Publishing
 
 ```bash
-php artisan vendor:publish --tag=laranail/installer-web::config   # route prefix, middleware
-php artisan vendor:publish --tag=laranail/installer-web::views    # customize the wizard views
+php artisan vendor:publish --tag=laranail/laranail-installer-web::config   # route prefix, middleware
+php artisan vendor:publish --tag=laranail/laranail-installer-web::views    # customize the wizard views
 ```
 
 ## Assets

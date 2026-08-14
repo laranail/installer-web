@@ -60,14 +60,14 @@ abstract class BaseInstallerController extends Controller
             'next' => $this->nextStep($step, $product),
             'progress' => $engine->progress(),
             'product' => $product,
-            'layout' => $registry->layout() ?? config('installer-web.layout') ?? 'installer-web::layouts.app',
+            'layout' => $registry->layout() ?? config('installer-web.layout') ?? 'laranail-installer-web::layouts.app',
             'component' => $registry->component($step) ?? WizardStep::class,
         ];
     }
 
     /**
      * The Blade view for a step: a consumer-registered view, else the generic form
-     * (field steps) or the per-step convention view (`installer-web::steps.{step}`).
+     * (field steps) or the per-step convention view (`laranail-installer-web::steps.{step}`).
      */
     protected function stepView(string $step, ?string $product = null): string
     {
@@ -78,7 +78,7 @@ abstract class BaseInstallerController extends Controller
         }
 
         return $this->engine($product)->fields($step) !== []
-            ? 'installer-web::steps.form'
-            : "installer-web::steps.{$step}";
+            ? 'laranail-installer-web::steps.form'
+            : "laranail-installer-web::steps.{$step}";
     }
 }
