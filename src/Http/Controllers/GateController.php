@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Installer\Web\Http\Controllers;
 
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
-use Simtabi\Laranail\Installer\Headless\Events\UnauthorizedInstallerAccess;
 use Simtabi\Laranail\Installer\Headless\Security\InstallerAccessPolicy;
+use Simtabi\Laranail\Installer\Headless\Events\UnauthorizedInstallerAccess;
 
 /**
  * The token/password gate: a neutral entry form for the secret installer token.

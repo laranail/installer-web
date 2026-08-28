@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Simtabi\Laranail\Installer\Headless\Steps\AbstractStep;
-use Simtabi\Laranail\Installer\Headless\Steps\StepRegistry;
-use Simtabi\Laranail\Installer\Headless\Support\InstallerContext;
 use Simtabi\Laranail\Installer\Web\Facades\InstallerUi;
 use Simtabi\Laranail\Installer\Web\Livewire\WizardStep;
 use Simtabi\Laranail\Installer\Web\Support\WebUiRegistry;
+use Simtabi\Laranail\Installer\Headless\Steps\AbstractStep;
+use Simtabi\Laranail\Installer\Headless\Steps\StepRegistry;
+use Simtabi\Laranail\Installer\Headless\Support\InstallerContext;
 
 it('registers a custom step view via the InstallerUi facade', function (): void {
     InstallerUi::view('welcome', 'my::welcome');

@@ -6,8 +6,8 @@ namespace Simtabi\Laranail\Installer\Web\Tests;
 
 use Livewire\LivewireServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Simtabi\Laranail\Installer\Headless\Providers\InstallerServiceProvider;
 use Simtabi\Laranail\Installer\Web\Providers\InstallerWebServiceProvider;
+use Simtabi\Laranail\Installer\Headless\Providers\InstallerServiceProvider;
 
 abstract class TestCase extends Orchestra
 {
@@ -24,9 +24,9 @@ abstract class TestCase extends Orchestra
     {
         $app['config']->set('database.default', 'testing');
         $app['config']->set('database.connections.testing', [
-            'driver' => 'sqlite',
+            'driver'   => 'sqlite',
             'database' => ':memory:',
-            'prefix' => '',
+            'prefix'   => '',
         ]);
 
         $app['config']->set('app.key', 'base64:' . base64_encode(random_bytes(32)));

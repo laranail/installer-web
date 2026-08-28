@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Installer\Web\Livewire;
 
-use Illuminate\Contracts\View\View;
 use Livewire\Component;
-use Simtabi\Laranail\Installer\Headless\Exceptions\InstallerException;
+use Illuminate\Contracts\View\View;
 use Simtabi\Laranail\Installer\Headless\InstallerEngine;
+use Simtabi\Laranail\Installer\Headless\Exceptions\InstallerException;
 
 /**
  * Generic wizard step component: renders any core step's declared fields, binds
@@ -65,16 +65,16 @@ class WizardStep extends Component
             : $this->redirectRoute('installer-web.show', ['step' => $next]);
     }
 
-    /** Hook: after validation, before the step executes. Override to react/augment `$data`. */
-    protected function saving(): void {}
-
-    /** Hook: after the step executed successfully (`$next` = the next step key, or null when finished). */
-    protected function saved(?string $next): void {}
-
     public function render(): View
     {
         return view('laranail-installer-web::livewire.wizard-step', [
             'fields' => app(InstallerEngine::class)->fields($this->step),
         ]);
     }
+
+    /** Hook: after validation, before the step executes. Override to react/augment `$data`. */
+    protected function saving(): void {}
+
+    /** Hook: after the step executed successfully (`$next` = the next step key, or null when finished). */
+    protected function saved(?string $next): void {}
 }

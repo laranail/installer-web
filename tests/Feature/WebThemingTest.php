@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\ViewErrorBag;
 use Livewire\Livewire;
-use Simtabi\Laranail\Installer\Headless\Facades\Installer;
+use Illuminate\Support\ViewErrorBag;
+use Illuminate\Support\Facades\Blade;
 use Simtabi\Laranail\Installer\Headless\Wizard\Field;
 use Simtabi\Laranail\Installer\Web\Facades\InstallerUi;
 use Simtabi\Laranail\Installer\Web\Livewire\WizardStep;
+use Simtabi\Laranail\Installer\Headless\Facades\Installer;
 
 it('applies branding and renders registered slots', function (): void {
     config()->set('installer-web.branding.theme', '#abcdef');

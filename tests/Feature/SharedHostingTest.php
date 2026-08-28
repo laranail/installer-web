@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Simtabi\Laranail\Installer\Headless\Support\InstallationState;
 use Simtabi\Laranail\Installer\Web\Http\Middleware\UseInstallerStores;
 

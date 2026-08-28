@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Livewire\Livewire;
-use Simtabi\Laranail\Installer\Headless\Support\InstallationState;
 use Simtabi\Laranail\Installer\Web\Livewire\WizardStep;
+use Simtabi\Laranail\Installer\Headless\Support\InstallationState;
 
 beforeEach(function (): void {
     $this->dir = sys_get_temp_dir() . '/installer-web-' . uniqid();

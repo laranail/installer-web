@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Event;
-use Simtabi\Laranail\Installer\Headless\Events\UnauthorizedInstallerAccess;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Simtabi\Laranail\Installer\Headless\Support\InstallationState;
+use Simtabi\Laranail\Installer\Headless\Events\UnauthorizedInstallerAccess;
 
 beforeEach(function (): void {
     $this->withoutMiddleware(ValidateCsrfToken::class);
