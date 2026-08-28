@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Installer\Web\Tests;
 
 use Livewire\LivewireServiceProvider;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Simtabi\Laranail\Installer\Web\Providers\InstallerWebServiceProvider;
 use Simtabi\Laranail\Installer\Headless\Providers\InstallerServiceProvider;
+use Simtabi\Laranail\Package\Tools\Testing\IsolatedTestCase;
 
-abstract class TestCase extends Orchestra
+abstract class TestCase extends IsolatedTestCase
 {
     protected function getPackageProviders($app): array
     {
