@@ -9,8 +9,13 @@
 ## Reporting a vulnerability
 
 Please **do not** open a public GitHub issue for security-sensitive findings.
-Email **opensource@simtabi.com** with a description, reproduction steps, and the
+Email **security@simtabi.com** with a description, reproduction steps, and the
 affected version(s). We aim to acknowledge within 72 hours.
+
+> **Prefer GitHub private vulnerability reporting** when you can: open it from this
+> repository's Security tab. The report arrives attached to the repo with a draft advisory
+> and a CVE request path already in place. Email is the fallback for anyone who would
+> rather not use GitHub.
 
 ## Hardening notes
 
