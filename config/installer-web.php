@@ -50,8 +50,8 @@ return [
     */
 
     'denied_view' => 'laranail-installer-web::denied',
-    'gate_view'   => 'laranail-installer-web::gate',
-    'setup_view'  => 'laranail-installer-web::setup',
+    'gate_view' => 'laranail-installer-web::gate',
+    'setup_view' => 'laranail-installer-web::setup',
 
     /*
     |--------------------------------------------------------------------------
@@ -67,7 +67,7 @@ return [
 
     'branding' => [
         'title' => null, // null → "<app name> installer"
-        'logo'  => null,  // URL to a logo image, shown above the title
+        'logo' => null,  // URL to a logo image, shown above the title
         'theme' => env('INSTALLER_WEB_THEME', '#4f46e5'), // accent colour
     ],
 

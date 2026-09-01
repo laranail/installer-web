@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Installer\Web\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
-use Simtabi\Laranail\Installer\Headless\Security\InstallerAccessPolicy;
 use Simtabi\Laranail\Installer\Headless\Events\UnauthorizedInstallerAccess;
+use Simtabi\Laranail\Installer\Headless\Security\InstallerAccessPolicy;
 
 /**
  * The token/password gate: a neutral entry form for the secret installer token.
@@ -34,7 +34,7 @@ final class GateController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $key = 'installer-gate:' . $request->ip();
+        $key = 'installer-gate:'.$request->ip();
         $maxAttempts = (int) config('installer.security.throttle.gate_max_attempts', 5);
         $lockoutSeconds = (int) config('installer.security.throttle.gate_lockout_minutes', 15) * 60;
 

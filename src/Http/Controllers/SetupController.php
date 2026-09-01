@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Installer\Web\Http\Controllers;
 
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Http\RedirectResponse;
-use Simtabi\Laranail\Installer\Headless\Support\EnvWriter;
 use Simtabi\Laranail\Installer\Headless\Security\InstallerAccessPolicy;
+use Simtabi\Laranail\Installer\Headless\Support\EnvWriter;
 
 /**
  * No-SSH security setup: lets the operator set the installer gate password (stored
@@ -42,7 +42,7 @@ final class SetupController extends Controller
 
         $validated = $request->validate([
             'password' => ['nullable', 'string', 'min:8'],
-            'lock_ip'  => ['nullable', 'boolean'],
+            'lock_ip' => ['nullable', 'boolean'],
         ]);
 
         $values = [];

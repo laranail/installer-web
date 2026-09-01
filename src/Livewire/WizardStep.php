@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Installer\Web\Livewire;
 
-use Livewire\Component;
 use Illuminate\Contracts\View\View;
-use Simtabi\Laranail\Installer\Headless\InstallerEngine;
+use Livewire\Component;
 use Simtabi\Laranail\Installer\Headless\Exceptions\InstallerException;
+use Simtabi\Laranail\Installer\Headless\InstallerEngine;
 
 /**
  * Generic wizard step component: renders any core step's declared fields, binds

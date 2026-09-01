@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use Simtabi\Laranail\Installer\Web\Facades\InstallerUi;
-use Simtabi\Laranail\Installer\Web\Livewire\WizardStep;
-use Simtabi\Laranail\Installer\Web\Support\WebUiRegistry;
 use Simtabi\Laranail\Installer\Headless\Steps\AbstractStep;
 use Simtabi\Laranail\Installer\Headless\Steps\StepRegistry;
 use Simtabi\Laranail\Installer\Headless\Support\InstallerContext;
+use Simtabi\Laranail\Installer\Web\Facades\InstallerUi;
+use Simtabi\Laranail\Installer\Web\Livewire\WizardStep;
+use Simtabi\Laranail\Installer\Web\Support\WebUiRegistry;
 
 it('registers a custom step view via the InstallerUi facade', function (): void {
     InstallerUi::view('welcome', 'my::welcome');
@@ -37,9 +37,9 @@ it('forwards step registration to the headless engine', function (): void {
 });
 
 it('renders a consumer-registered view for a step (end to end)', function (): void {
-    $dir = sys_get_temp_dir() . '/iv-' . uniqid();
+    $dir = sys_get_temp_dir().'/iv-'.uniqid();
     mkdir($dir);
-    file_put_contents($dir . '/custom.blade.php', 'CUSTOM-WELCOME-VIEW');
+    file_put_contents($dir.'/custom.blade.php', 'CUSTOM-WELCOME-VIEW');
     app('view')->addNamespace('tmp', $dir);
 
     InstallerUi::view('welcome', 'tmp::custom');
@@ -48,6 +48,6 @@ it('renders a consumer-registered view for a step (end to end)', function (): vo
         ->assertOk()
         ->assertSee('CUSTOM-WELCOME-VIEW');
 
-    array_map(unlink(...), (array) glob($dir . '/*'));
+    array_map(unlink(...), (array) glob($dir.'/*'));
     rmdir($dir);
 });

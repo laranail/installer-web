@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Installer\Web\Providers;
 
-use Override;
-use Livewire\Livewire;
+use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
-use Simtabi\Laranail\Package\Tools\Package;
+use Livewire\Livewire;
+use Override;
+use Simtabi\Laranail\Installer\Web\Http\Middleware\EnforceInstallerAccess;
+use Simtabi\Laranail\Installer\Web\Http\Middleware\EnsureInstalled;
+use Simtabi\Laranail\Installer\Web\Http\Middleware\InstallerSecurityHeaders;
+use Simtabi\Laranail\Installer\Web\Http\Middleware\RedirectIfInstalled;
+use Simtabi\Laranail\Installer\Web\Http\Middleware\RequireInstallerToken;
+use Simtabi\Laranail\Installer\Web\Http\Middleware\UseInstallerStores;
 use Simtabi\Laranail\Installer\Web\InstallerUi;
 use Simtabi\Laranail\Installer\Web\Livewire\WizardStep;
 use Simtabi\Laranail\Installer\Web\Support\WebUiRegistry;
-use Simtabi\Laranail\Installer\Web\Http\Middleware\EnsureInstalled;
+use Simtabi\Laranail\Package\Tools\Package;
 use Simtabi\Laranail\Package\Tools\Providers\PackageServiceProvider;
-use Simtabi\Laranail\Installer\Web\Http\Middleware\UseInstallerStores;
-use Simtabi\Laranail\Installer\Web\Http\Middleware\RedirectIfInstalled;
-use Simtabi\Laranail\Installer\Web\Http\Middleware\RequireInstallerToken;
-use Simtabi\Laranail\Installer\Web\Http\Middleware\EnforceInstallerAccess;
-use Simtabi\Laranail\Installer\Web\Http\Middleware\InstallerSecurityHeaders;
 
 /**
  * Service provider for the install wizard web UI.
@@ -42,12 +42,12 @@ final class InstallerWebServiceProvider extends PackageServiceProvider
             ->hasViews('laranail-installer-web')
             ->hasRoute('web')
             ->registerMiddlewareAliases([
-                'laranail-installer-web.guard'     => RedirectIfInstalled::class,
+                'laranail-installer-web.guard' => RedirectIfInstalled::class,
                 'laranail-installer-web.installed' => EnsureInstalled::class,
-                'laranail-installer-web.stores'    => UseInstallerStores::class,
-                'laranail-installer-web.headers'   => InstallerSecurityHeaders::class,
-                'laranail-installer-web.security'  => EnforceInstallerAccess::class,
-                'laranail-installer-web.token'     => RequireInstallerToken::class,
+                'laranail-installer-web.stores' => UseInstallerStores::class,
+                'laranail-installer-web.headers' => InstallerSecurityHeaders::class,
+                'laranail-installer-web.security' => EnforceInstallerAccess::class,
+                'laranail-installer-web.token' => RequireInstallerToken::class,
             ]);
     }
 
