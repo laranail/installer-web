@@ -3,15 +3,15 @@
 declare(strict_types=1);
 
 use Livewire\Livewire;
-use Simtabi\Laranail\Installer\Headless\Support\InstallationState;
 use Simtabi\Laranail\Installer\Web\Livewire\WizardStep;
+use Simtabi\Laranail\Installer\Headless\Support\InstallationState;
 
 beforeEach(function (): void {
-    $this->dir = sys_get_temp_dir().'/installer-web-'.uniqid();
+    $this->dir = sys_get_temp_dir() . '/installer-web-' . uniqid();
     mkdir($this->dir, 0755, true);
-    config()->set('installer.env.path', $this->dir.'/.env');
-    config()->set('installer.env.example', $this->dir.'/.env.example');
-    file_put_contents($this->dir.'/.env.example', "APP_NAME=Example\nDB_CONNECTION=sqlite\n");
+    config()->set('installer.env.path', $this->dir . '/.env');
+    config()->set('installer.env.example', $this->dir . '/.env.example');
+    file_put_contents($this->dir . '/.env.example', "APP_NAME=Example\nDB_CONNECTION=sqlite\n");
 
     $state = app(InstallationState::class);
     $state->clear();
@@ -22,7 +22,7 @@ beforeEach(function (): void {
 
 afterEach(function (): void {
     app(InstallationState::class)->clear();
-    foreach (array_merge(glob($this->dir.'/*') ?: [], glob($this->dir.'/.*') ?: []) as $path) {
+    foreach (array_merge(glob($this->dir . '/*') ?: [], glob($this->dir . '/.*') ?: []) as $path) {
         if (is_file($path)) {
             @unlink($path);
         }
@@ -31,7 +31,7 @@ afterEach(function (): void {
 });
 
 it('writes the .env through the core engine and redirects', function (): void {
-    $dbFile = $this->dir.'/db.sqlite';
+    $dbFile = $this->dir . '/db.sqlite';
 
     Livewire::test(WizardStep::class, ['step' => 'environment'])
         ->set('data.app_name', 'My Site')
@@ -42,15 +42,15 @@ it('writes the .env through the core engine and redirects', function (): void {
         ->assertHasNoErrors()
         ->assertRedirect(route('installer-web.show', ['step' => 'migrate']));
 
-    $env = file_get_contents($this->dir.'/.env');
+    $env = file_get_contents($this->dir . '/.env');
 
     expect($env)->toContain('APP_NAME="My Site"')
         ->and($env)->toContain('DB_CONNECTION=sqlite')
-        ->and($env)->toContain('DB_DATABASE='.$dbFile);
+        ->and($env)->toContain('DB_DATABASE=' . $dbFile);
 });
 
 it('pre-fills from an existing .env (edit in place)', function (): void {
-    file_put_contents($this->dir.'/.env', "APP_NAME=\"Existing App\"\nDB_CONNECTION=pgsql\nDB_DATABASE=existing_db\n");
+    file_put_contents($this->dir . '/.env', "APP_NAME=\"Existing App\"\nDB_CONNECTION=pgsql\nDB_DATABASE=existing_db\n");
 
     Livewire::test(WizardStep::class, ['step' => 'environment'])
         ->assertSet('data.app_name', 'Existing App')

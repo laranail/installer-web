@@ -6,8 +6,8 @@ namespace Simtabi\Laranail\Installer\Web\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Simtabi\Laranail\Installer\Headless\Support\InstallationState;
 use Symfony\Component\HttpFoundation\Response;
+use Simtabi\Laranail\Installer\Headless\Support\InstallationState;
 
 /**
  * Blocks access to the wizard once installed (install-once guard), redirecting to

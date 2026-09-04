@@ -6,9 +6,9 @@ namespace Simtabi\Laranail\Installer\Web\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Simtabi\Laranail\Installer\Headless\Events\UnauthorizedInstallerAccess;
-use Simtabi\Laranail\Installer\Headless\Security\InstallerAccessPolicy;
 use Symfony\Component\HttpFoundation\Response;
+use Simtabi\Laranail\Installer\Headless\Security\InstallerAccessPolicy;
+use Simtabi\Laranail\Installer\Headless\Events\UnauthorizedInstallerAccess;
 
 /**
  * Enforces the installer access policy (HTTPS, allowed hosts, IP allowlist, and the
