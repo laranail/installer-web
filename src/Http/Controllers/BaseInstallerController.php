@@ -6,8 +6,8 @@ namespace Simtabi\Laranail\Installer\Web\Http\Controllers;
 
 use Illuminate\Routing\Controller;
 use Simtabi\Laranail\Installer\Headless\Contracts\Step;
-use Simtabi\Laranail\Installer\Headless\InstallerEngine;
 use Simtabi\Laranail\Installer\Web\Livewire\WizardStep;
+use Simtabi\Laranail\Installer\Headless\InstallerEngine;
 use Simtabi\Laranail\Installer\Web\Support\WebUiRegistry;
 
 /**
@@ -55,12 +55,12 @@ abstract class BaseInstallerController extends Controller
         $registry = app(WebUiRegistry::class);
 
         return [
-            'steps' => $engine->orderedSteps(),
-            'current' => $step,
-            'next' => $this->nextStep($step, $product),
-            'progress' => $engine->progress(),
-            'product' => $product,
-            'layout' => $registry->layout() ?? config('installer-web.layout') ?? 'laranail-installer-web::layouts.app',
+            'steps'     => $engine->orderedSteps(),
+            'current'   => $step,
+            'next'      => $this->nextStep($step, $product),
+            'progress'  => $engine->progress(),
+            'product'   => $product,
+            'layout'    => $registry->layout() ?? config('installer-web.layout') ?? 'laranail-installer-web::layouts.app',
             'component' => $registry->component($step) ?? WizardStep::class,
         ];
     }
