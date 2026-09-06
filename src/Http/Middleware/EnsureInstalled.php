@@ -6,8 +6,8 @@ namespace Simtabi\Laranail\Installer\Web\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Simtabi\Laranail\Installer\Headless\Support\InstallationState;
 use Symfony\Component\HttpFoundation\Response;
+use Simtabi\Laranail\Installer\Headless\Support\InstallationState;
 
 /**
  * Opt-in guard for application routes: redirects to the install wizard until the

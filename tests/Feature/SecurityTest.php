@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Event;
-use Simtabi\Laranail\Installer\Headless\Events\UnauthorizedInstallerAccess;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Simtabi\Laranail\Installer\Headless\Support\InstallationState;
+use Simtabi\Laranail\Installer\Headless\Events\UnauthorizedInstallerAccess;
 
 beforeEach(function (): void {
     $this->withoutMiddleware(ValidateCsrfToken::class);
@@ -59,7 +59,7 @@ it('redirects to the gate when a token is configured and absent', function (): v
 it('lets a valid token through (via query) and authorizes the session', function (): void {
     config()->set('installer.security.token', 'sekret-token');
 
-    $this->get(route('installer-web.show', ['step' => 'welcome']).'?token=sekret-token')
+    $this->get(route('installer-web.show', ['step' => 'welcome']) . '?token=sekret-token')
         ->assertOk();
 });
 

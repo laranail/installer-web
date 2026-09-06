@@ -6,8 +6,8 @@ namespace Simtabi\Laranail\Installer\Web;
 
 use Closure;
 use Simtabi\Laranail\Installer\Headless\Contracts\Step;
-use Simtabi\Laranail\Installer\Headless\Facades\Installer;
 use Simtabi\Laranail\Installer\Web\Support\WebUiRegistry;
+use Simtabi\Laranail\Installer\Headless\Facades\Installer;
 
 /**
  * Fluent web-decoration DSL — the web counterpart of the headless {@see Installer}
@@ -34,7 +34,7 @@ final readonly class InstallerUi
      * Swap the Livewire component for a (field-collecting) step. The component must
      * `mount(string $step)`.
      *
-     * @param  class-string  $component
+     * @param class-string $component
      */
     public function component(string $step, string $component): static
     {

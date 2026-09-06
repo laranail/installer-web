@@ -6,10 +6,10 @@ namespace Simtabi\Laranail\Installer\Web\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Simtabi\Laranail\Installer\Headless\Exceptions\InstallerException;
 use Simtabi\Laranail\Installer\Headless\Support\InstallerContext;
-use Simtabi\Laranail\Installer\Headless\Support\RequirementsChecker;
 use Simtabi\Laranail\Installer\Web\Http\Requests\StepFormRequest;
+use Simtabi\Laranail\Installer\Headless\Support\RequirementsChecker;
+use Simtabi\Laranail\Installer\Headless\Exceptions\InstallerException;
 
 /**
  * Drives the install wizard. Renders each step and forwards collected input to
