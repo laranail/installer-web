@@ -1,9 +1,10 @@
 # laranail/installer-web
 
-[![Latest version on Packagist](https://img.shields.io/packagist/v/laranail/installer-web.svg)](https://packagist.org/packages/laranail/installer-web)
 [![Tests](https://github.com/laranail/installer-web/actions/workflows/tests.yml/badge.svg)](https://github.com/laranail/installer-web/actions/workflows/tests.yml)
 [![Static analysis](https://github.com/laranail/installer-web/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/laranail/installer-web/actions/workflows/static-analysis.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+`laranail/installer-web` is not published to Packagist, so there is no registry-version badge to show — see [Install](#install).
 
 > A Tailwind + Blade + **Livewire 4** install wizard for [`laranail/installer-headless`](https://opensource.simtabi.com/documentation/laranail/installer-headless/) — pure presentation and input collection; every operation is delegated to the headless engine (no install logic, never touches files or the database directly).
 
