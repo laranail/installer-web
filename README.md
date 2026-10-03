@@ -18,6 +18,21 @@ composer require laranail/installer-web
 
 Publish the assets/config, then visit the install route — see the docs for the exact steps.
 
+## Quick start
+
+```php
+// app/Providers/AppServiceProvider.php
+use Simtabi\Laranail\Installer\Web\Facades\InstallerUi;
+
+public function boot(): void
+{
+    // The wizard is already served at /install; this adds a footer link to every step
+    InstallerUi::section('footer', '<a href="/support">Need help installing?</a>');
+}
+```
+
+The full walkthrough is in [Decorating the web wizard](docs/decorating.md); everything else is in the [documentation index](#documentation).
+
 ## Documentation
 
 Full documentation is at **[opensource.simtabi.com/documentation/laranail/installer-web](https://opensource.simtabi.com/documentation/laranail/installer-web/)** — installation, usage, how the wizard drives the engine, theming, and what gets generated.
