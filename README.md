@@ -18,7 +18,19 @@ composer require laranail/installer-web
 
 Publish the assets/config, then visit the install route — see the docs for the exact steps.
 
-## Quick start
+## Quick start guide and usage
+
+### Getting started
+
+Nothing to configure: the `InstallerWebServiceProvider` and the headless engine's provider are
+auto-discovered, and the wizard is served at `/install`. To serve it elsewhere, set the prefix in
+`.env`:
+
+```dotenv
+INSTALLER_WEB_PREFIX=install
+```
+
+### Usage
 
 ```php
 // app/Providers/AppServiceProvider.php
@@ -29,6 +41,13 @@ public function boot(): void
     // The wizard is already served at /install; this adds a footer link to every step
     InstallerUi::section('footer', '<a href="/support">Need help installing?</a>');
 }
+```
+
+Render a step with your own Blade view, or replace the whole layout:
+
+```php
+InstallerUi::view('welcome', 'app.install.welcome')   // custom Blade view for a step
+    ->layout('app.install.layout');                    // custom layout
 ```
 
 The full walkthrough is in [Decorating the web wizard](docs/decorating.md); everything else is in the [documentation index](#documentation).
