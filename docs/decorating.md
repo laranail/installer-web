@@ -102,7 +102,7 @@ InstallerUi::component('user', FancyUserStep::class);
 Every view is publishable; replacing the published copy overrides it too:
 
 ```bash
-php artisan vendor:publish --tag=laranail/laranail-installer-web::views
+php artisan vendor:publish --tag=laranail::installer-web-views
 ```
 
 The `InstallerUi` registry takes precedence, then a published view, then the package
