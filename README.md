@@ -52,7 +52,7 @@ InstallerUi::view('welcome', 'app.install.welcome')   // custom Blade view for a
 
 The full walkthrough is in [Decorating the web wizard](docs/decorating.md); everything else is in the [documentation index](#documentation).
 
-## Documentation
+## <a name="documentation"></a>Documentation
 
 Full documentation is at **[opensource.simtabi.com/documentation/laranail/installer-web](https://opensource.simtabi.com/documentation/laranail/installer-web/)** — installation, usage, how the wizard drives the engine, theming, and what gets generated.
 
