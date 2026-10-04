@@ -37,7 +37,7 @@
             </div>
         @endif
 
-        <form method="POST" action="{{ route('installer-web.store', ['step' => 'requirements']) }}">
+        <form method="POST" action="{{ route('laranail-installer-web.store', ['step' => 'requirements']) }}">
             @csrf
             <button type="submit" @disabled(! $report['passes'])
                 @class([

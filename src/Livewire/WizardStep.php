@@ -62,7 +62,7 @@ class WizardStep extends Component
 
         $next === null
             ? $this->redirect((string) config('installer.redirect_to', '/'))
-            : $this->redirectRoute('installer-web.show', ['step' => $next]);
+            : $this->redirectRoute('laranail-installer-web.show', ['step' => $next]);
     }
 
     public function render(): View

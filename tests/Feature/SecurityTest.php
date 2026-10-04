@@ -15,11 +15,11 @@ beforeEach(function (): void {
 afterEach(fn () => app(InstallationState::class)->clear());
 
 it('serves the wizard unrestricted by default (no security configured)', function (): void {
-    $this->get(route('installer-web.show', ['step' => 'welcome']))->assertOk();
+    $this->get(route('laranail-installer-web.show', ['step' => 'welcome']))->assertOk();
 });
 
 it('adds hardening headers to installer responses', function (): void {
-    $this->get(route('installer-web.show', ['step' => 'welcome']))
+    $this->get(route('laranail-installer-web.show', ['step' => 'welcome']))
         ->assertHeader('X-Frame-Options', 'DENY')
         ->assertHeader('X-Content-Type-Options', 'nosniff')
         ->assertHeader('X-Robots-Tag', 'noindex, nofollow');
@@ -29,7 +29,7 @@ it('denies a request from a disallowed IP with a generic 403', function (): void
     config()->set('installer.security.allowed_ips', ['203.0.113.0/24']);
     Event::fake([UnauthorizedInstallerAccess::class]);
 
-    $this->call('GET', route('installer-web.show', ['step' => 'welcome']), server: ['REMOTE_ADDR' => '198.51.100.5'])
+    $this->call('GET', route('laranail-installer-web.show', ['step' => 'welcome']), server: ['REMOTE_ADDR' => '198.51.100.5'])
         ->assertForbidden()
         ->assertSee('Access denied');
 
@@ -39,38 +39,38 @@ it('denies a request from a disallowed IP with a generic 403', function (): void
 it('allows a request from an allowlisted IP', function (): void {
     config()->set('installer.security.allowed_ips', ['198.51.100.0/24']);
 
-    $this->call('GET', route('installer-web.show', ['step' => 'welcome']), server: ['REMOTE_ADDR' => '198.51.100.5'])
+    $this->call('GET', route('laranail-installer-web.show', ['step' => 'welcome']), server: ['REMOTE_ADDR' => '198.51.100.5'])
         ->assertOk();
 });
 
 it('denies plain HTTP when HTTPS is required', function (): void {
     config()->set('installer.security.require_https', true);
 
-    $this->get(route('installer-web.show', ['step' => 'welcome']))->assertForbidden();
+    $this->get(route('laranail-installer-web.show', ['step' => 'welcome']))->assertForbidden();
 });
 
 it('redirects to the gate when a token is configured and absent', function (): void {
     config()->set('installer.security.token', 'sekret-token');
 
-    $this->get(route('installer-web.show', ['step' => 'welcome']))
-        ->assertRedirect(route('installer-web.gate'));
+    $this->get(route('laranail-installer-web.show', ['step' => 'welcome']))
+        ->assertRedirect(route('laranail-installer-web.gate'));
 });
 
 it('lets a valid token through (via query) and authorizes the session', function (): void {
     config()->set('installer.security.token', 'sekret-token');
 
-    $this->get(route('installer-web.show', ['step' => 'welcome']) . '?token=sekret-token')
+    $this->get(route('laranail-installer-web.show', ['step' => 'welcome']) . '?token=sekret-token')
         ->assertOk();
 });
 
 it('accepts a valid token at the gate and rejects an invalid one', function (): void {
     config()->set('installer.security.token', 'sekret-token');
 
-    $this->post(route('installer-web.gate.store'), ['token' => 'wrong'])
+    $this->post(route('laranail-installer-web.gate.store'), ['token' => 'wrong'])
         ->assertSessionHasErrors('token');
 
-    $this->post(route('installer-web.gate.store'), ['token' => 'sekret-token'])
-        ->assertRedirect(route('installer-web.index'))
+    $this->post(route('laranail-installer-web.gate.store'), ['token' => 'sekret-token'])
+        ->assertRedirect(route('laranail-installer-web.index'))
         ->assertSessionMissing('errors');
 
     expect(session('installer.authorized'))->toBeTrue();

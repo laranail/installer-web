@@ -15,7 +15,7 @@ it('applies branding and renders registered slots', function (): void {
     config()->set('installer-web.branding.title', 'My Installer');
     InstallerUi::section('footer', 'FOOTER-SLOT-CONTENT');
 
-    $this->get(route('installer-web.show', ['step' => 'welcome']))
+    $this->get(route('laranail-installer-web.show', ['step' => 'welcome']))
         ->assertOk()
         ->assertSee('#abcdef', false)
         ->assertSee('My Installer')

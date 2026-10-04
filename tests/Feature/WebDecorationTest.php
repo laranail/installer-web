@@ -44,7 +44,7 @@ it('renders a consumer-registered view for a step (end to end)', function (): vo
 
     InstallerUi::view('welcome', 'tmp::custom');
 
-    $this->get(route('installer-web.show', ['step' => 'welcome']))
+    $this->get(route('laranail-installer-web.show', ['step' => 'welcome']))
         ->assertOk()
         ->assertSee('CUSTOM-WELCOME-VIEW');
 

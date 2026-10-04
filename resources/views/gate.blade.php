@@ -6,7 +6,7 @@
     <h2 class="text-lg font-semibold text-slate-900">Verify access</h2>
     <p class="mt-1 text-sm text-slate-500">Enter the installer token to continue.</p>
 
-    <form method="POST" action="{{ route('installer-web.gate.store') }}" class="mt-6 space-y-4">
+    <form method="POST" action="{{ route('laranail-installer-web.gate.store') }}" class="mt-6 space-y-4">
         @csrf
         <div>
             <label for="token" class="block text-sm font-medium text-slate-700">Token</label>

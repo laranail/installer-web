@@ -26,7 +26,7 @@ final class GateController extends Controller
     public function show(): View|RedirectResponse
     {
         if ($this->policy->unrestricted() || ! $this->policy->tokenConfigured() || session('installer.authorized') === true) {
-            return redirect()->route('installer-web.index');
+            return redirect()->route('laranail-installer-web.index');
         }
 
         return view((string) config('installer-web.gate_view', 'laranail-installer-web::gate'));
@@ -58,6 +58,6 @@ final class GateController extends Controller
         RateLimiter::clear($key);
         $request->session()->put('installer.authorized', true);
 
-        return redirect()->route('installer-web.index');
+        return redirect()->route('laranail-installer-web.index');
     }
 }
