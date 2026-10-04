@@ -3,5 +3,5 @@
 @section('title', ucfirst(str_replace(['-', '_'], ' ', $current)))
 
 @section('content')
-    @livewire($component ?? 'installer-wizard-step', ['step' => $current])
+    @livewire($component ?? 'laranail-installer-web.wizard-step', ['step' => $current])
 @endsection

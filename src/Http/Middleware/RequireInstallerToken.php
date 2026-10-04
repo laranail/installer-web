@@ -44,7 +44,7 @@ final readonly class RequireInstallerToken
 
         UnauthorizedInstallerAccess::dispatch('token', $request->ip(), $request->path());
 
-        return redirect()->route('installer-web.gate');
+        return redirect()->route('laranail-installer-web.gate');
     }
 
     private function authorize(Request $request, Closure $next): Response

@@ -21,9 +21,9 @@ $prefix = (string) config('installer-web.prefix', 'install');
 // Token gate — registered before the wildcard `/{step}` route so `/install/gate`
 // never resolves as a step. Not behind `installer.token` (it IS the entry point);
 // access policy (IP/host/window/HTTPS) + headers still apply, with a strict limiter.
-Route::middleware(array_merge(['laranail-installer-web.stores'], $base, ['laranail-installer-web.headers', 'laranail-installer-web.guard', 'laranail-installer-web.security', 'throttle:installer-gate']))
+Route::middleware(array_merge(['laranail-installer-web.stores'], $base, ['laranail-installer-web.headers', 'laranail-installer-web.guard', 'laranail-installer-web.security', 'throttle:laranail-installer-web.gate']))
     ->prefix($prefix)
-    ->name('installer-web.')
+    ->name('laranail-installer-web.')
     ->group(function (): void {
         Route::get('gate', [GateController::class, 'show'])->name('gate');
         Route::post('gate', [GateController::class, 'store'])->name('gate.store');
@@ -35,9 +35,9 @@ Route::middleware(array_merge(['laranail-installer-web.stores'], $base, ['larana
 
 // Wizard. Full stack: security headers → install-once guard → access policy →
 // token gate → throttle.
-Route::middleware(array_merge(['laranail-installer-web.stores'], $base, ['laranail-installer-web.headers', 'laranail-installer-web.guard', 'laranail-installer-web.security', 'laranail-installer-web.token', 'throttle:installer']))
+Route::middleware(array_merge(['laranail-installer-web.stores'], $base, ['laranail-installer-web.headers', 'laranail-installer-web.guard', 'laranail-installer-web.security', 'laranail-installer-web.token', 'throttle:laranail-installer-web.wizard']))
     ->prefix($prefix)
-    ->name('installer-web.')
+    ->name('laranail-installer-web.')
     ->group(function (): void {
         Route::get('/', [WizardController::class, 'index'])->name('index');
         Route::get('/{step}', [WizardController::class, 'show'])->name('show');

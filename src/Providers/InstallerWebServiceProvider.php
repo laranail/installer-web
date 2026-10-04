@@ -14,6 +14,8 @@ use Simtabi\Laranail\Package\Tools\Package;
 use Simtabi\Laranail\Installer\Web\InstallerUi;
 use Simtabi\Laranail\Installer\Web\Livewire\WizardStep;
 use Simtabi\Laranail\Installer\Web\Support\WebUiRegistry;
+use Simtabi\Laranail\Installer\Web\Livewire\LegacyWizardStep;
+use Simtabi\Laranail\Installer\Web\Support\RouteNameFallback;
 use Simtabi\Laranail\Installer\Web\Http\Middleware\EnsureInstalled;
 use Simtabi\Laranail\Package\Tools\Providers\PackageServiceProvider;
 use Simtabi\Laranail\Installer\Web\Http\Middleware\UseInstallerStores;
@@ -32,6 +34,22 @@ use Simtabi\Laranail\Installer\Web\Http\Middleware\InstallerSecurityHeaders;
  */
 final class InstallerWebServiceProvider extends PackageServiceProvider
 {
+    public const string WIZARD_LIMITER = 'laranail-installer-web.wizard';
+
+    public const string GATE_LIMITER = 'laranail-installer-web.gate';
+
+    public const string WIZARD_STEP_COMPONENT = 'laranail-installer-web.wizard-step';
+
+    /**
+     * Deprecated bare names, still registered as aliases of the scoped ones above.
+     * Each emits E_USER_DEPRECATED when used; removable in the next minor after 0.1.
+     */
+    private const string LEGACY_WIZARD_LIMITER = 'installer';
+
+    private const string LEGACY_GATE_LIMITER = 'installer-gate';
+
+    private const string LEGACY_WIZARD_STEP_COMPONENT = 'installer-wizard-step';
+
     #[Override]
     public function configurePackage(Package $package): void
     {
@@ -61,29 +79,58 @@ final class InstallerWebServiceProvider extends PackageServiceProvider
     #[Override]
     public function packageBooted(): void
     {
-        Livewire::component('installer-wizard-step', WizardStep::class);
+        // Scoped name first: Livewire derives a class's canonical name from the first
+        // registration, so WizardStep round-trips as the scoped name.
+        Livewire::component(self::WIZARD_STEP_COMPONENT, WizardStep::class);
+        Livewire::component(self::LEGACY_WIZARD_STEP_COMPONENT, LegacyWizardStep::class);
 
         // Enables the reusable <x-laranail-installer-web::field /> component in consumer views.
         Blade::anonymousComponentNamespace('laranail-installer-web::components', 'laranail-installer-web');
 
         $this->registerRateLimiters();
+
+        RouteNameFallback::register($this->app->make('url'));
     }
 
     /**
      * Named limiters for the wizard and (more strictly) the token gate, configurable
      * via `installer.security.throttle`. Keyed by client IP (resolved through the
      * app's TrustProxies).
+     *
+     * The bare `installer` / `installer-gate` names are still registered, as
+     * deprecated aliases that delegate to the scoped limiter and emit a deprecation
+     * each time a route throttled by them is hit.
      */
     private function registerRateLimiters(): void
     {
-        RateLimiter::for('installer', fn (Request $request): Limit => Limit::perMinutes(
+        $wizard = static fn (Request $request): Limit => Limit::perMinutes(
             (int) config('installer.security.throttle.decay_minutes', 1),
             (int) config('installer.security.throttle.max_attempts', 60),
-        )->by((string) $request->ip()));
+        )->by((string) $request->ip());
 
-        RateLimiter::for('installer-gate', fn (Request $request): Limit => Limit::perMinutes(
+        $gate = static fn (Request $request): Limit => Limit::perMinutes(
             (int) config('installer.security.throttle.gate_lockout_minutes', 15),
             (int) config('installer.security.throttle.gate_max_attempts', 5),
-        )->by((string) $request->ip()));
+        )->by((string) $request->ip());
+
+        RateLimiter::for(self::WIZARD_LIMITER, $wizard);
+        RateLimiter::for(self::GATE_LIMITER, $gate);
+
+        $legacy = [
+            self::LEGACY_WIZARD_LIMITER => [self::WIZARD_LIMITER, $wizard],
+            self::LEGACY_GATE_LIMITER   => [self::GATE_LIMITER, $gate],
+        ];
+
+        foreach ($legacy as $bare => [$scoped, $limit]) {
+            RateLimiter::for($bare, static function (Request $request) use ($bare, $scoped, $limit): Limit {
+                trigger_error(sprintf(
+                    'Rate limiter "%s" (laranail/installer-web) is deprecated and will be removed in the next minor after 0.1; use "%s".',
+                    $bare,
+                    $scoped,
+                ), E_USER_DEPRECATED);
+
+                return $limit($request);
+            });
+        }
     }
 }

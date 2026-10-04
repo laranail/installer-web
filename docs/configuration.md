@@ -5,7 +5,7 @@ Web-specific keys live under `installer-web.*` (`config/installer-web.php`):
 | Key | Default | Purpose |
 |---|---|---|
 | `prefix` | `'install'` | URL prefix the wizard is served under. |
-| `middleware` | `['web']` | Middleware applied to wizard routes (the install-once guard and `throttle:60,1` are always appended). |
+| `middleware` | `['web']` | Middleware applied to wizard routes (the install-once guard and the `laranail-installer-web.wizard` / `laranail-installer-web.gate` rate limiters are always appended). |
 
 Behavioral configuration — locales, requirements, user model/fields, license,
 the step pipeline, the post-install redirect (`installer.redirect_to`) and the

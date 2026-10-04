@@ -112,14 +112,14 @@ final class WizardController extends BaseInstallerController
     private function stepRedirect(string $step, ?string $product): RedirectResponse
     {
         return $product !== null
-            ? redirect()->route('installer-web.product.show', ['product' => $product, 'step' => $step])
-            : redirect()->route('installer-web.show', ['step' => $step]);
+            ? redirect()->route('laranail-installer-web.product.show', ['product' => $product, 'step' => $step])
+            : redirect()->route('laranail-installer-web.show', ['step' => $step]);
     }
 
     private function indexRedirect(?string $product): RedirectResponse
     {
         return $product !== null
-            ? redirect()->route('installer-web.product.index', ['product' => $product])
-            : redirect()->route('installer-web.index');
+            ? redirect()->route('laranail-installer-web.product.index', ['product' => $product])
+            : redirect()->route('laranail-installer-web.index');
     }
 }

@@ -21,7 +21,7 @@ final readonly class EnsureInstalled
     public function handle(Request $request, Closure $next): Response
     {
         if (! $this->state->isInstalled()) {
-            return redirect()->route('installer-web.index');
+            return redirect()->route('laranail-installer-web.index');
         }
 
         return $next($request);

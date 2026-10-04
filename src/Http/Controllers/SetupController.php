@@ -28,7 +28,7 @@ final class SetupController extends Controller
     public function show(): View|RedirectResponse
     {
         if ($this->policy->tokenConfigured()) {
-            return redirect()->route('installer-web.index');
+            return redirect()->route('laranail-installer-web.index');
         }
 
         return view((string) config('installer-web.setup_view', 'laranail-installer-web::setup'));
@@ -37,7 +37,7 @@ final class SetupController extends Controller
     public function store(Request $request): RedirectResponse
     {
         if ($this->policy->tokenConfigured()) {
-            return redirect()->route('installer-web.index');
+            return redirect()->route('laranail-installer-web.index');
         }
 
         $validated = $request->validate([
@@ -56,7 +56,7 @@ final class SetupController extends Controller
         }
 
         if ($values === []) {
-            return redirect()->route('installer-web.index');
+            return redirect()->route('laranail-installer-web.index');
         }
 
         $path = (string) (config('installer.env.path') ?: base_path('.env'));
@@ -74,6 +74,6 @@ final class SetupController extends Controller
 
         $request->session()->put('installer.authorized', true);
 
-        return redirect()->route('installer-web.index');
+        return redirect()->route('laranail-installer-web.index');
     }
 }

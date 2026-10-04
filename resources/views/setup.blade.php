@@ -9,7 +9,7 @@
         are written to your <code>.env</code>; no shell access required.
     </p>
 
-    <form method="POST" action="{{ route('installer-web.setup.store') }}" class="mt-6 space-y-4">
+    <form method="POST" action="{{ route('laranail-installer-web.setup.store') }}" class="mt-6 space-y-4">
         @csrf
         <div>
             <label for="password" class="block text-sm font-medium text-slate-700">Gate password (optional)</label>
@@ -38,7 +38,7 @@
             >
                 Save &amp; continue
             </button>
-            <a href="{{ route('installer-web.index') }}" class="text-sm text-slate-500 hover:text-slate-700">Skip</a>
+            <a href="{{ route('laranail-installer-web.index') }}" class="text-sm text-slate-500 hover:text-slate-700">Skip</a>
         </div>
     </form>
 @endsection

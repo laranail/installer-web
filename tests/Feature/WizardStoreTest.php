@@ -13,8 +13,8 @@ beforeEach(function (): void {
 afterEach(fn () => app(InstallationState::class)->clear());
 
 it('runs a step via the controller and advances to the next', function (): void {
-    $this->post(route('installer-web.store', ['step' => 'welcome']), ['locale' => 'en'])
-        ->assertRedirect(route('installer-web.show', ['step' => 'requirements']));
+    $this->post(route('laranail-installer-web.store', ['step' => 'welcome']), ['locale' => 'en'])
+        ->assertRedirect(route('laranail-installer-web.show', ['step' => 'requirements']));
 
     expect(app(InstallationState::class)->isStepComplete('welcome'))->toBeTrue();
 });

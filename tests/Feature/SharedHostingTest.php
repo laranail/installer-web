@@ -47,15 +47,15 @@ it('leaves the app stores untouched when overrides are null', function (): void 
 });
 
 it('sets the gate password via the web setup screen, no SSH (G5)', function (): void {
-    $this->post(route('installer-web.setup.store'), ['password' => 'super-secret-pw'])
-        ->assertRedirect(route('installer-web.index'));
+    $this->post(route('laranail-installer-web.setup.store'), ['password' => 'super-secret-pw'])
+        ->assertRedirect(route('laranail-installer-web.index'));
 
     expect((string) file_get_contents($this->dir . '/.env'))->toContain('INSTALLER_TOKEN_HASH=');
 });
 
 it('locks the installer to the current IP via the setup screen', function (): void {
-    $this->post(route('installer-web.setup.store'), ['lock_ip' => '1'])
-        ->assertRedirect(route('installer-web.index'));
+    $this->post(route('laranail-installer-web.setup.store'), ['lock_ip' => '1'])
+        ->assertRedirect(route('laranail-installer-web.index'));
 
     expect((string) file_get_contents($this->dir . '/.env'))->toContain('INSTALLER_ALLOWED_IPS=');
 });
@@ -63,5 +63,5 @@ it('locks the installer to the current IP via the setup screen', function (): vo
 it('redirects setup to the wizard once a token is already configured', function (): void {
     config()->set('installer.security.token', 'already-set');
 
-    $this->get(route('installer-web.setup'))->assertRedirect(route('installer-web.index'));
+    $this->get(route('laranail-installer-web.setup'))->assertRedirect(route('laranail-installer-web.index'));
 });

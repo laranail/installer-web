@@ -40,7 +40,7 @@ it('writes the .env through the core engine and redirects', function (): void {
         ->set('data.database_name', $dbFile)
         ->call('save')
         ->assertHasNoErrors()
-        ->assertRedirect(route('installer-web.show', ['step' => 'migrate']));
+        ->assertRedirect(route('laranail-installer-web.show', ['step' => 'migrate']));
 
     $env = file_get_contents($this->dir . '/.env');
 
