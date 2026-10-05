@@ -59,6 +59,7 @@ final class InstallerWebServiceProvider extends PackageServiceProvider
             ->withoutConfigNamespacing()
             ->hasViews('laranail-installer-web')
             ->hasRoute('web')
+            ->hasDeprecatedRouteNames(prefixes: [RouteNameFallback::BARE_PREFIX => RouteNameFallback::SCOPED_PREFIX])
             ->registerMiddlewareAliases([
                 'laranail-installer-web.guard'     => RedirectIfInstalled::class,
                 'laranail-installer-web.installed' => EnsureInstalled::class,
@@ -85,11 +86,9 @@ final class InstallerWebServiceProvider extends PackageServiceProvider
         Livewire::component(self::LEGACY_WIZARD_STEP_COMPONENT, LegacyWizardStep::class);
 
         // Enables the reusable <x-laranail-installer-web::field /> component in consumer views.
-        Blade::anonymousComponentNamespace('laranail-installer-web::components', 'laranail-installer-web');
+        Blade::anonymousComponentNamespace('laranail/installer-web::components', 'laranail-installer-web');
 
         $this->registerRateLimiters();
-
-        RouteNameFallback::register($this->app->make('url'), $this->app->make('router'));
     }
 
     /**
