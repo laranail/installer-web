@@ -36,6 +36,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Requires `laranail/package-tools ^0.1.3`, the first release with
   `BareRouteNameAliases`, the shared naming assertions, and the slash form
   registered beside a hyphen view namespace.
+- `composer.json` no longer declares a `vcs` repository for `laranail/db-tools`. Nothing in the
+  `require` closure needs it: `laranail/installer-headless` carries db-tools in `require-dev` only,
+  which Composer never resolves for a dependency (`composer why laranail/db-tools` finds nothing
+  after a fresh update).
 
 ### Deprecated
 

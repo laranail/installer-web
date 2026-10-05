@@ -110,10 +110,6 @@
         },
         {
             "type": "vcs",
-            "url": "https://github.com/laranail/db-tools"
-        },
-        {
-            "type": "vcs",
             "url": "https://github.com/laranail/installer-headless"
         },
         {
