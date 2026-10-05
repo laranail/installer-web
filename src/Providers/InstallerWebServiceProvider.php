@@ -89,7 +89,7 @@ final class InstallerWebServiceProvider extends PackageServiceProvider
 
         $this->registerRateLimiters();
 
-        RouteNameFallback::register($this->app->make('url'));
+        RouteNameFallback::register($this->app->make('url'), $this->app->make('router'));
     }
 
     /**

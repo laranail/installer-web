@@ -5,7 +5,9 @@ declare(strict_types=1);
 use Livewire\Livewire;
 use Illuminate\Http\Request;
 use Illuminate\Cache\RateLimiter;
+use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Routing\RouteCollection;
 use Illuminate\Contracts\Console\Kernel;
 use Simtabi\Laranail\Installer\Web\Livewire\WizardStep;
 use Simtabi\Laranail\Installer\Web\Support\RouteNameFallback;
@@ -110,6 +112,54 @@ it('delegates to a missing-route resolver registered before it', function (): vo
 
     expect(route('someone-else.page'))->toBe('http://localhost/elsewhere')
         ->and(route('installer-web.index'))->toBe(route('laranail-installer-web.index'));
+});
+
+it('treats a non-string answer from the previous resolver as no answer', function (mixed $answer): void {
+    $url = app('url');
+    $url->resolveMissingNamedRoutesUsing(fn (string $name): mixed => $name === 'someone-else.odd' ? $answer : null);
+
+    RouteNameFallback::register($url, app('router'));
+
+    // Unchecked, a foreign object/int/array is a TypeError against the
+    // fallback's ?string return under strict_types; it must read as "missing".
+    route('someone-else.odd');
+})->with([
+    'int'           => [42],
+    'url generator' => [fn (): UrlGenerator => app('url')],
+    'array'         => [['http://localhost/elsewhere']],
+])->throws(RouteNotFoundException::class);
+
+it('answers the scoped-route lookup from the public router, not the generator internals', function (): void {
+    $url = app('url');
+    $router = app('router');
+
+    // Point the generator at an EMPTY collection while the router still holds
+    // the real one: a fallback reading UrlGenerator::$routes would find no
+    // scoped route; one asking the public Router finds it.
+    $real = $router->getRoutes();
+    $url->setRoutes(new RouteCollection);
+
+    RouteNameFallback::register($url, $router);
+
+    $deprecations = [];
+    set_error_handler(function (int $errno, string $message) use (&$deprecations): bool {
+        $deprecations[] = $message;
+
+        return true;
+    }, E_USER_DEPRECATED);
+
+    try {
+        // The generator then cannot build the URL itself, which surfaces as a
+        // RouteNotFoundException naming the SCOPED route: proof the lookup
+        // matched through the router and delegated to the scoped name.
+        expect(fn (): string => route('installer-web.index'))
+            ->toThrow(RouteNotFoundException::class, 'laranail-installer-web.index');
+    } finally {
+        restore_error_handler();
+        $url->setRoutes($real);
+    }
+
+    expect($deprecations)->toHaveCount(1);
 });
 
 it('registers its rate limiters under laranail-installer-web.*', function (): void {

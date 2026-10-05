@@ -38,6 +38,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `docs/architecture.md` named the middleware aliases `installer.guard` and
   `installer.installed`, and both docs pages described a `throttle:60,1` the
   routes do not carry.
+- `RouteNameFallback` passed the previously installed missing-route resolver's
+  answer through unchecked, so a foreign resolver returning anything but a
+  string (an object, an int, an array) raised a `TypeError` inside `route()`
+  under `strict_types`. A non-string answer now reads as "not resolved".
+- `RouteNameFallback` asks the public `Router::has()` whether the scoped route
+  exists instead of reading the URL generator's protected route collection
+  through a bound closure. `register()` takes the router as an optional second
+  argument; the single-argument call still works.
 
 ## [0.1.0] - 2026-07-11
 
