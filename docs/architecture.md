@@ -52,7 +52,8 @@ below.
 | Rate limiters | `laranail-installer-web.wizard`, `laranail-installer-web.gate` | Tuned by `installer.security.throttle.*` |
 | Middleware aliases | `laranail-installer-web.{guard, installed, stores, headers, security, token}` | |
 | Livewire component | `laranail-installer-web.wizard-step` | `@livewire('laranail-installer-web.wizard-step', ['step' => $step])` |
-| Views, Blade components | `laranail-installer-web::` | `<x-laranail-installer-web::field />` |
+| Views | `laranail/installer-web::` (canonical), `laranail-installer-web::` | `view('laranail/installer-web::gate')`; both resolve the same files, including copies published under `resources/views/vendor/laranail-installer-web/` |
+| Blade components | `laranail-installer-web::` | `<x-laranail-installer-web::field />` (a Blade tag cannot spell the slash) |
 | Artisan commands | none | The `laranail::installer.*` commands belong to `laranail/installer-headless`. |
 
 The config key stays `installer-web.*`: the package opts out of config
@@ -70,7 +71,11 @@ the `deprecations` channel), and each is removable in the next minor after 0.1.
 | `throttle:installer` | `throttle:laranail-installer-web.wizard` | Still registered; delegates to the scoped limiter. |
 | `throttle:installer-gate` | `throttle:laranail-installer-web.gate` | Still registered; delegates to the scoped limiter. |
 | `installer-wizard-step` (Livewire) | `laranail-installer-web.wizard-step` | Still registered; mounts the same component. |
+| `RouteNameFallback::register()` | `hasDeprecatedRouteNames()` on the package, or package-tools' `BareRouteNameAliases::install()` | Still installs the same fallback, through `BareRouteNameAliases`, and emits `E_USER_DEPRECATED`. |
 
+> The route fallback is package-tools' `BareRouteNameAliases`, declared on the
+> package with `hasDeprecatedRouteNames(prefixes: ['installer-web.' => 'laranail-installer-web.'])`.
+> It announces each bare name once per process rather than on every `route()` call.
 > `Route::has('installer-web.index')` answers `false`: it reads the route
 > collection directly and never reaches the fallback. Ask for the scoped name.
 > The route fallback chains to any missing-route resolver registered before it,

@@ -32,5 +32,10 @@ abstract class TestCase extends IsolatedTestCase
         $app['config']->set('app.key', 'base64:' . base64_encode(random_bytes(32)));
         $app['config']->set('cache.default', 'array');
         $app['config']->set('queue.default', 'sync');
+
+        // A host view path holding a copy published under the hyphen view
+        // namespace, so NamingConventionTest can prove the slash namespace still
+        // finds it.
+        $app['config']->set('view.paths', [...(array) $app['config']->get('view.paths', []), __DIR__ . '/fixtures/views']);
     }
 }

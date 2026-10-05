@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 use Livewire\Livewire;
 use Illuminate\Http\Request;
+use Psr\Log\LoggerInterface;
 use Illuminate\Cache\RateLimiter;
 use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Routing\RouteCollection;
 use Illuminate\Contracts\Console\Kernel;
 use Simtabi\Laranail\Installer\Web\Livewire\WizardStep;
+use Simtabi\Laranail\Package\Tools\Testing\NamingScope;
 use Simtabi\Laranail\Installer\Web\Support\RouteNameFallback;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Simtabi\Laranail\Package\Tools\Testing\AssertsRegisteredNames;
+use Simtabi\Laranail\Package\Tools\Support\Routing\BareRouteNameAliases;
+use Simtabi\Laranail\Installer\Web\Providers\InstallerWebServiceProvider;
 
 /**
  * Every name this package registers into a framework-owned registry.
@@ -20,7 +25,8 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
  * component names all live in flat maps keyed by the name, so a second package
  * claiming the same key does not collide loudly: it silently replaces the first.
  * These assertions read the LIVE registries of the booted application, not the
- * provider source, so they hold whatever the registration code looks like.
+ * provider source, through package-tools' shared AssertsRegisteredNames, so they
+ * hold whatever the registration code looks like.
  *
  * The bare names this package shipped before 0.1.x was scoped are still
  * registered as deprecated aliases. Those are listed explicitly below; any OTHER
@@ -32,52 +38,69 @@ const INSTALLER_WEB_SCOPE = 'laranail-installer-web';
 const INSTALLER_WEB_DEPRECATED_LIMITERS = ['installer', 'installer-gate'];
 const INSTALLER_WEB_DEPRECATED_COMPONENTS = ['installer-wizard-step'];
 
-/** @return list<string> */
-function installerWebLimiterNames(): array
-{
-    $limiter = app(RateLimiter::class);
+uses(AssertsRegisteredNames::class);
 
-    return array_keys((fn (): array => $this->limiters)->call($limiter));
+/**
+ * The scope the shared assertions judge names against.
+ *
+ * The base path is narrowed to one directory because package-tools 0.1.3
+ * defaults it to the package root, which holds this checkout's own vendor/ and
+ * tests/ and would claim every framework closure binding as the package's. Code
+ * lives in src/, views in resources/.
+ */
+function installerWebScope(string $directory = 'src'): NamingScope
+{
+    return NamingScope::for(
+        package: 'laranail/installer-web',
+        ownerNamespace: 'Simtabi\\Laranail\\Installer\\Web\\',
+        basePath: dirname(__DIR__, 2) . '/' . $directory,
+    );
 }
 
-/** @return array<string, class-string> */
-function installerWebLivewireComponents(): array
+/**
+ * Re-run the bare-route-name installation package-tools performs at boot.
+ */
+function installerWebInstallRouteFallback(): void
 {
-    $finder = app('livewire.finder');
-
-    return (fn (): array => $this->classComponents)->call($finder);
+    app()->getProvider(InstallerWebServiceProvider::class)->package->bootPackageDeprecatedRouteNames(
+        app('router'),
+        app(UrlGenerator::class),
+        static fn (): LoggerInterface => app(LoggerInterface::class),
+    );
 }
 
-/** Route names whose action is one of this package's controllers. */
-function installerWebRouteNames(): array
-{
-    $names = [];
-
-    foreach (Route::getRoutes()->getRoutes() as $route) {
-        if (str_starts_with((string) $route->getActionName(), 'Simtabi\\Laranail\\Installer\\Web\\')) {
-            $names[] = (string) $route->getName();
-        }
-    }
-
-    return $names;
-}
+beforeEach(function (): void {
+    BareRouteNameAliases::forgetWarnings();
+});
 
 it('names every one of its routes laranail-installer-web.*', function (): void {
-    $names = installerWebRouteNames();
-
     // Non-vacuity: the gate, setup and wizard groups register 10 routes. A filter that matches nothing
     // would otherwise pass every assertion below.
-    expect($names)->toHaveCount(10);
+    $names = $this->assertRouteNamesScoped(installerWebScope(), atLeast: 10);
 
-    foreach ($names as $name) {
-        expect($name)->toStartWith(INSTALLER_WEB_SCOPE . '.');
-    }
+    expect($names)->toHaveCount(10)->each->toStartWith(INSTALLER_WEB_SCOPE . '.');
 
     expect(Route::has('installer-web.index'))->toBeFalse()
         ->and(Route::has('laranail-installer-web.index'))->toBeTrue();
 });
 
 it('still resolves the deprecated bare route names, with a deprecation', function (): void {
+    $this->assertDeprecatedRouteNamesResolve(
+        [
+            'installer-web.index'        => 'laranail-installer-web.index',
+            'installer-web.show'         => 'laranail-installer-web.show',
+            'installer-web.gate'         => 'laranail-installer-web.gate',
+            'installer-web.setup'        => 'laranail-installer-web.setup',
+            'installer-web.product.show' => 'laranail-installer-web.product.show',
+        ],
+        parameters: [
+            'installer-web.show'         => ['step' => 'welcome'],
+            'installer-web.product.show' => ['product' => 'addon', 'step' => 'welcome'],
+        ],
+    );
+
+    BareRouteNameAliases::forgetWarnings();
+
     $deprecations = [];
     set_error_handler(function (int $errno, string $message) use (&$deprecations): bool {
         $deprecations[] = $message;
@@ -108,17 +131,22 @@ it('delegates to a missing-route resolver registered before it', function (): vo
     $url = app('url');
     $url->resolveMissingNamedRoutesUsing(fn (string $name): ?string => $name === 'someone-else.page' ? 'http://localhost/elsewhere' : null);
 
-    RouteNameFallback::register($url);
+    installerWebInstallRouteFallback();
+    set_error_handler(static fn (): bool => true, E_USER_DEPRECATED);
 
-    expect(route('someone-else.page'))->toBe('http://localhost/elsewhere')
-        ->and(route('installer-web.index'))->toBe(route('laranail-installer-web.index'));
+    try {
+        expect(route('someone-else.page'))->toBe('http://localhost/elsewhere')
+            ->and(route('installer-web.index'))->toBe(route('laranail-installer-web.index'));
+    } finally {
+        restore_error_handler();
+    }
 });
 
 it('treats a non-string answer from the previous resolver as no answer', function (mixed $answer): void {
     $url = app('url');
     $url->resolveMissingNamedRoutesUsing(fn (string $name): mixed => $name === 'someone-else.odd' ? $answer : null);
 
-    RouteNameFallback::register($url, app('router'));
+    installerWebInstallRouteFallback();
 
     // Unchecked, a foreign object/int/array is a TypeError against the
     // fallback's ?string return under strict_types; it must read as "missing".
@@ -139,7 +167,7 @@ it('answers the scoped-route lookup from the public router, not the generator in
     $real = $router->getRoutes();
     $url->setRoutes(new RouteCollection);
 
-    RouteNameFallback::register($url, $router);
+    installerWebInstallRouteFallback();
 
     $deprecations = [];
     set_error_handler(function (int $errno, string $message) use (&$deprecations): bool {
@@ -163,17 +191,8 @@ it('answers the scoped-route lookup from the public router, not the generator in
 });
 
 it('registers its rate limiters under laranail-installer-web.*', function (): void {
-    $names = installerWebLimiterNames();
-
-    expect($names)->toContain(INSTALLER_WEB_SCOPE . '.wizard')
-        ->and($names)->toContain(INSTALLER_WEB_SCOPE . '.gate');
-
-    $bare = array_values(array_filter(
-        $names,
-        static fn (string $name): bool => ! str_starts_with($name, INSTALLER_WEB_SCOPE . '.'),
-    ));
-
-    expect($bare)->toEqualCanonicalizing(INSTALLER_WEB_DEPRECATED_LIMITERS);
+    expect($this->assertRateLimitersScoped(installerWebScope(), deprecated: INSTALLER_WEB_DEPRECATED_LIMITERS, atLeast: 2))
+        ->toEqualCanonicalizing([INSTALLER_WEB_SCOPE . '.wizard', INSTALLER_WEB_SCOPE . '.gate']);
 });
 
 it('routes the wizard and gate through the scoped limiters', function (): void {
@@ -215,14 +234,12 @@ it('keeps the deprecated bare limiters working, with a deprecation', function ()
 });
 
 it('registers its middleware aliases under laranail-installer-web', function (): void {
-    $ours = array_filter(
-        app('router')->getMiddleware(),
-        static fn (string $class): bool => str_starts_with($class, 'Simtabi\\Laranail\\Installer\\Web\\'),
-    );
+    // D1: `laranail-installer-web.<x>` is a sanctioned vendor-scoped variant.
+    $ours = $this->assertMiddlewareAliasesScoped(installerWebScope(), atLeast: 6);
 
     expect($ours)->toHaveCount(6);
 
-    foreach (array_keys($ours) as $alias) {
+    foreach ($ours as $alias) {
         // Hyphens and dots only: `::` would be split by the middleware parser.
         expect($alias)->toStartWith(INSTALLER_WEB_SCOPE . '.')
             ->and($alias)->not->toContain('::');
@@ -230,14 +247,9 @@ it('registers its middleware aliases under laranail-installer-web', function ():
 });
 
 it('registers no bare Artisan command', function (): void {
-    $ours = array_filter(
-        app(Kernel::class)->all(),
-        static fn (object $command): bool => str_starts_with($command::class, 'Simtabi\\Laranail\\Installer\\Web\\'),
-    );
-
     // The package ships no command today; the laranail::installer.* commands in
     // the kernel belong to laranail/installer-headless. Pin both facts.
-    expect($ours)->toBe([]);
+    expect($this->assertCommandNamesScoped(installerWebScope(), atLeast: 0))->toBe([]);
 
     $bare = array_filter(
         array_keys(app(Kernel::class)->all()),
@@ -248,29 +260,47 @@ it('registers no bare Artisan command', function (): void {
 });
 
 it('registers its Livewire component under laranail-installer-web.*', function (): void {
-    $components = installerWebLivewireComponents();
-
-    expect($components)->toHaveKey(INSTALLER_WEB_SCOPE . '.wizard-step')
-        ->and($components[INSTALLER_WEB_SCOPE . '.wizard-step'])->toBe(WizardStep::class)
+    expect($this->assertLivewireComponentsScoped(installerWebScope(), deprecated: INSTALLER_WEB_DEPRECATED_COMPONENTS, atLeast: 1))
+        ->toBe([INSTALLER_WEB_SCOPE . '.wizard-step'])
         // The canonical name Livewire derives from the class is the scoped one.
         ->and(app('livewire.finder')->normalizeName(WizardStep::class))->toBe(INSTALLER_WEB_SCOPE . '.wizard-step');
-
-    $ours = array_filter(
-        $components,
-        static fn (string $class): bool => str_starts_with($class, 'Simtabi\\Laranail\\Installer\\Web\\'),
-    );
-
-    $bare = array_values(array_filter(
-        array_keys($ours),
-        static fn (string $name): bool => ! str_starts_with($name, INSTALLER_WEB_SCOPE . '.'),
-    ));
-
-    expect($bare)->toEqualCanonicalizing(INSTALLER_WEB_DEPRECATED_COMPONENTS);
 });
 
 it('registers its views and Blade components under laranail-installer-web', function (): void {
-    expect(array_keys(app('view')->getFinder()->getHints()))->toContain(INSTALLER_WEB_SCOPE)
-        ->and(array_keys(app('view')->getFinder()->getHints()))->not->toContain('installer-web');
+    expect($this->assertViewNamespacesScoped(installerWebScope('resources'), atLeast: 2))
+        ->toContain('laranail/installer-web', INSTALLER_WEB_SCOPE)
+        ->and(array_keys(app('view')->getFinder()->getHints()))->not->toContain('installer-web')
+        ->and($this->assertBladeComponentsScoped(installerWebScope('resources'), atLeast: 1))->not->toBeEmpty();
+
+    expect(view()->exists('laranail/installer-web::gate'))->toBeTrue()
+        ->and(view()->exists(INSTALLER_WEB_SCOPE . '::gate'))->toBeTrue();
+});
+
+it('finds a view a host published under the hyphen namespace through the slash namespace', function (): void {
+    expect(trim(view('laranail/installer-web::host-override')->render()))->toBe('host-override');
+});
+
+it('keeps the deprecated RouteNameFallback::register() working, with a deprecation', function (): void {
+    app('url')->resolveMissingNamedRoutesUsing(static fn (): ?string => null);
+
+    $deprecations = [];
+    set_error_handler(function (int $errno, string $message) use (&$deprecations): bool {
+        $deprecations[] = $message;
+
+        return true;
+    }, E_USER_DEPRECATED);
+
+    try {
+        RouteNameFallback::register(app('url'));
+
+        expect(route('installer-web.index'))->toBe(route('laranail-installer-web.index'));
+    } finally {
+        restore_error_handler();
+    }
+
+    expect(implode("\n", $deprecations))
+        ->toContain('RouteNameFallback::register() (laranail/installer-web) is deprecated')
+        ->toContain('[installer-web.index]');
 });
 
 it('still mounts the deprecated bare Livewire name, with a deprecation', function (): void {
