@@ -5,7 +5,9 @@ declare(strict_types=1);
 use Livewire\Livewire;
 use Illuminate\Http\Request;
 use Illuminate\Cache\RateLimiter;
+use Illuminate\Routing\UrlGenerator;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Routing\RouteCollection;
 use Illuminate\Contracts\Console\Kernel;
 use Simtabi\Laranail\Installer\Web\Livewire\WizardStep;
 use Simtabi\Laranail\Installer\Web\Support\RouteNameFallback;
@@ -123,7 +125,7 @@ it('treats a non-string answer from the previous resolver as no answer', functio
     route('someone-else.odd');
 })->with([
     'int'           => [42],
-    'url generator' => [fn (): Illuminate\Routing\UrlGenerator => app('url')],
+    'url generator' => [fn (): UrlGenerator => app('url')],
     'array'         => [['http://localhost/elsewhere']],
 ])->throws(RouteNotFoundException::class);
 
@@ -135,7 +137,7 @@ it('answers the scoped-route lookup from the public router, not the generator in
     // the real one: a fallback reading UrlGenerator::$routes would find no
     // scoped route; one asking the public Router finds it.
     $real = $router->getRoutes();
-    $url->setRoutes(new Illuminate\Routing\RouteCollection);
+    $url->setRoutes(new RouteCollection);
 
     RouteNameFallback::register($url, $router);
 
