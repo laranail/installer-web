@@ -51,28 +51,28 @@ it('denies plain HTTP when HTTPS is required', function (): void {
 });
 
 it('redirects to the gate when a token is configured and absent', function (): void {
-    config()->set('installer.security.token', TestCredentials::secret('installer-token'));
+    config()->set('installer.security.token', TestCredentials::secret('installer'));
 
     $this->get(route('laranail-installer-web.show', ['step' => 'welcome']))
         ->assertRedirect(route('laranail-installer-web.gate'));
 });
 
 it('lets a valid token through (via query) and authorizes the session', function (): void {
-    config()->set('installer.security.token', TestCredentials::secret('installer-token'));
+    config()->set('installer.security.token', TestCredentials::secret('installer'));
 
-    $this->get(route('laranail-installer-web.show', ['step' => 'welcome']) . '?token=' . TestCredentials::secret('installer-token'))
+    $this->get(sprintf('%s?token=%s', route('laranail-installer-web.show', ['step' => 'welcome']), TestCredentials::secret('installer')))
         ->assertOk();
 });
 
 it('accepts a valid token at the gate and rejects an invalid one', function (): void {
-    config()->set('installer.security.token', TestCredentials::secret('installer-token'));
+    config()->set('installer.security.token', TestCredentials::secret('installer'));
 
-    expect(TestCredentials::secret('wrong-installer-token'))->not->toBe(TestCredentials::secret('installer-token'));
+    expect(TestCredentials::secret('wrong'))->not->toBe(TestCredentials::secret('installer'));
 
-    $this->post(route('laranail-installer-web.gate.store'), ['token' => TestCredentials::secret('wrong-installer-token')])
+    $this->post(route('laranail-installer-web.gate.store'), ['token' => TestCredentials::secret('wrong')])
         ->assertSessionHasErrors('token');
 
-    $this->post(route('laranail-installer-web.gate.store'), ['token' => TestCredentials::secret('installer-token')])
+    $this->post(route('laranail-installer-web.gate.store'), ['token' => TestCredentials::secret('installer')])
         ->assertRedirect(route('laranail-installer-web.index'))
         ->assertSessionMissing('errors');
 
